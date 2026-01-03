@@ -1,0 +1,19 @@
+export default {
+  content: ["./index.html", "./src/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      keyframes: {
+        jiggle: {
+          "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
+          "25%": { transform: "translateY(-1px) rotate(-0.4deg)" },
+          "50%": { transform: "translateY(0) rotate(0.4deg)" },
+          "75%": { transform: "translateY(-1px) rotate(0deg)" },
+        },
+      },
+      animation: {
+        jiggle: "jiggle 220ms ease-in-out",
+      },
+    },
+  },
+  plugins: [],
+};
