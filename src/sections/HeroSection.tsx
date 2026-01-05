@@ -18,7 +18,7 @@ export default function HeroSection() {
       "
     >
       {/* Interactive background fills entire hero (including behind navbar) */}
-      <HeroGravityBG className="opacity-70" />
+      <HeroGravityBG className="opacity-80" />
 
       {/* Content (pushed down so it clears navbar) */}
       <div className="relative z-10 mx-auto max-w-5xl px-6 pt-40 translate-y-20 text-center">

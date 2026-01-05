@@ -1,239 +1,259 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useMemo, useRef } from "react";
 
 type Project = {
   title: string;
   description: string;
-  href: string; // GitHub or live link
-  imageSrc: string; // default thumbnail
-  videoSrc?: string; // hover preview (mp4/webm)
-  tags: string[];
+  tech: string[];
+  image: string; // static thumbnail
+  media?: string; // hover video OR gif (mp4/webm/gif)
+  link?: string; // optional (some cards shouldn't be clickable)
 };
 
-function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
-  const ref = useRef<T | null>(null);
-  const [inView, setInView] = useState(false);
+const projects: Project[] = [
+  {
+    title: "Anomalyze",
+    description:
+      "Predictive maintenance React dashboard benchmarking XGBoost, CatBoost, and ensemble baselines on NASA equipment failure datasets to flag early degradation signals.",
+    tech: ["React", "XGBoost", "CatBoost", "Python", "Dashboard"],
+    image: "/projects/anomalyze.png",
+    media: "/projects/anomalyze.mp4",
+    link: "https://github.com/Anomalyze-AIM/Anomalyze",
+  },
+  {
+    title: "Capital Agent",
+    description:
+      "Investment insights app combining forecasting models and a conversational interface to generate risk signals, scenarios, and portfolio guidance.",
+    tech: ["React", "Flask", "MongoDB", "ML"],
+    image: "/projects/capital-agent.png",
+    media: "/projects/capital-agent.mp4",
+    link: "https://devpost.com/software/capitalagent",
+  },
+  {
+    title: "DocuWrangler",
+    description:
+      "RAG document QA with grounded citations and highlight-aware retrieval for fast, reliable querying across large PDFs.",
+    tech: ["LangChain", "GPT-4o", "React", "Flask"],
+    image: "/projects/docuwrangler.png",
+    media: "/projects/docuwrangler.mp4",
+    link: "https://github.com/greeshiee/DocuWrangler",
+  },
+  {
+    title: "Med-istory",
+    description:
+      "Clinical summarization assistant turning transcripts into structured summaries with secure document handling and real-time updates.",
+    tech: ["React", "Flask", "Azure", "LLM"],
+    image: "/projects/medistory.png",
+    media: "/projects/medistory.mp4",
+    link: "https://github.com/VVarsha6/Medistory",
+  },
+  {
+    title: "SentimentShop",
+    description:
+      "Transformer-based sentiment dashboard analyzing YouTube comments to surface actionable insights for creators at scale.",
+    tech: ["React", "Flask", "BERT", "YouTube API"],
+    image: "/projects/sentimentshop.png",
+    media: "/projects/sentimentshop.mp4",
+    link: "https://youtubeproductreview-10068906480.development.catalystappsail.com/",
+  },
+  {
+    title: "Avinyam Bot",
+    description:
+      "Robotics + computer vision workflow for agricultural produce inspection using calibrated camera angles and CV-based classification.",
+    tech: ["OpenCV", "Computer Vision", "Arduino"],
+    image: "/projects/avinyam.png",
+    media: "/projects/avinyam.mp4",
+    link: "https://link.springer.com/chapter/10.1007/978-3-031-31066-9_62",
+  },
+  {
+    title: "Cat-Search Engine",
+    description:
+      "Built a cat-focused search engine by crawling 150,000+ websites with Apache Nutch and indexing in Solr; improved ranking via Rocchio feedback + hierarchical clustering and shipped a Streamlit UI.",
+    tech: ["Apache Nutch", "Apache Solr", "Rocchio", "Clustering", "Streamlit"],
+    image: "/projects/cat-search.png",
+    media: "/projects/cat-search.mp4",
+    link: "https://gamma.app/docs/Search-Engine-for-Cats-Project-Overview-4t2cknunsmj46ey",
+  },
+  {
+    title: "GRU Time Series Prediction",
+    description:
+      "Engineered a GRU-based model for stock-market time series to capture long-term dependencies and benchmarked against RNNs/LSTMs for stability and forecasting quality.",
+    tech: ["Python", "TensorFlow", "NumPy", "pandas", "GRU"],
+    image: "/projects/gru-stocks.png",
+    media: "/projects/gru-stocks.mp4",
+    // no link
+  },
+];
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const io = new IntersectionObserver(([entry]) => {
-      setInView(entry.isIntersecting);
-    }, options);
-
-    io.observe(el);
-    return () => io.disconnect();
-  }, [options]);
-
-  return { ref, inView };
+function isVideo(src?: string) {
+  if (!src) return false;
+  return (
+    src.endsWith(".mp4") ||
+    src.endsWith(".webm") ||
+    src.endsWith(".ogg") ||
+    src.includes(".mp4?") ||
+    src.includes(".webm?")
+  );
 }
 
-function ProjectCard({ p }: { p: Project }) {
-  const { ref, inView } = useInView<HTMLAnchorElement>({
-    threshold: 0.18,
-  });
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
+function Card({ p }: { p: Project }) {
+  const Wrapper: any = p.link ? motion.a : motion.div;
 
   return (
-    <a
-      ref={ref}
-      href={p.href}
-      target="_blank"
-      rel="noreferrer"
+    <Wrapper
+      href={p.link}
+      target={p.link ? "_blank" : undefined}
+      rel={p.link ? "noreferrer" : undefined}
       className={[
-        "group relative block overflow-hidden rounded-2xl",
-        "border border-white/10 bg-white/[0.03]",
-        "shadow-[0_14px_40px_rgba(0,0,0,0.35)]",
-        "transition-all duration-300 ease-out",
-        "hover:-translate-y-1 hover:border-sky-300/25",
-        // scroll animation (reversible)
-        inView ? "opacity-100 scale-100" : "opacity-0 scale-[0.985]",
+        "group relative block rounded-2xl border border-white/10 bg-white/5 p-5 transition",
+        "hover:bg-white/7 focus:outline-none",
+        p.link ? "cursor-pointer" : "cursor-default",
       ].join(" ")}
-      style={{
-        transitionProperty: "transform, opacity, border-color, box-shadow",
-      }}
-      aria-label={`Open ${p.title}`}
+      whileHover={p.link ? { y: -2 } : undefined}
+      transition={{ duration: 0.18, ease: "easeOut" }}
     >
-      {/* subtle hover bloom */}
+      {/* Neon hover outline */}
       <div
         className="
-          pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300
-          group-hover:opacity-100
+          pointer-events-none absolute -inset-[1px] rounded-[18px]
+          opacity-0 transition-opacity duration-200
+          group-hover:opacity-100 group-focus-visible:opacity-100
         "
         style={{
-          background:
-            "radial-gradient(520px circle at 30% 35%, rgba(56,189,248,0.10), rgba(56,189,248,0.04) 40%, rgba(0,0,0,0) 70%)",
+          boxShadow:
+            "0 0 0 1px rgba(56,189,248,0.55), 0 0 22px rgba(56,189,248,0.18)",
         }}
       />
 
       {/* Media */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-black/20">
-        {/* Image (default) */}
+      <div className="relative mb-5 aspect-video overflow-hidden rounded-xl bg-black/35">
         <img
-          src={p.imageSrc}
+          src={p.image}
           alt={p.title}
           className="
             absolute inset-0 h-full w-full object-cover
-            opacity-100 transition-opacity duration-200
+            transition-opacity duration-200
             group-hover:opacity-0
           "
           loading="lazy"
         />
 
-        {/* Video (on hover) */}
-        {p.videoSrc ? (
-          <video
-            className="
-              absolute inset-0 h-full w-full object-cover
-              opacity-0 transition-opacity duration-200
-              group-hover:opacity-100
-            "
-            src={p.videoSrc}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            onMouseEnter={(e) => {
-              // play on hover (best UX + prevents autoplay blocks)
-              const v = e.currentTarget;
-              v.currentTime = 0;
-              v.play().catch(() => {});
-            }}
-            onMouseLeave={(e) => {
-              const v = e.currentTarget;
-              v.pause();
-            }}
-          />
+        {p.media ? (
+          isVideo(p.media) ? (
+            <video
+              src={p.media}
+              muted
+              loop
+              playsInline
+              autoPlay
+              className="
+                absolute inset-0 h-full w-full object-cover
+                opacity-0 transition-opacity duration-200
+                group-hover:opacity-100
+              "
+            />
+          ) : (
+            <img
+              src={p.media}
+              alt={`${p.title} preview`}
+              className="
+                absolute inset-0 h-full w-full object-cover
+                opacity-0 transition-opacity duration-200
+                group-hover:opacity-100
+              "
+              loading="lazy"
+            />
+          )
         ) : null}
 
-        {/* top-right "view" hint */}
-        <div
-          className="
-            absolute right-3 top-3 rounded-full
-            border border-white/10 bg-black/30 px-3 py-1
-            text-xs text-white/70 backdrop-blur
-            opacity-0 transition-opacity duration-200
-            group-hover:opacity-100
-          "
-        >
-          View ↗
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0 opacity-70" />
       </div>
 
-      {/* Content */}
-      <div className="relative px-5 py-4">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-[17px] font-semibold text-white">{p.title}</h3>
-        </div>
+      <h3 className="mb-2 text-[15px] font-semibold text-white sm:text-base">
+        {p.title}
+      </h3>
 
-        <p className="mt-2 text-[14px] leading-relaxed text-white/70">
-          {p.description}
-        </p>
+      <p className="mb-4 text-sm leading-relaxed text-white/65">
+        {p.description}
+      </p>
 
-        {/* Tags */}
-        <div className="mt-3 flex flex-wrap gap-2">
-          {p.tags.map((t) => (
-            <span
-              key={t}
-              className="
-                inline-flex items-center justify-center
-                rounded-full border border-white/10 bg-white/5
-                px-3 py-1 text-[12px] font-medium text-white/75
-                transition-colors duration-200
-                group-hover:border-sky-300/25 group-hover:bg-sky-300/10
-              "
-            >
-              {t}
-            </span>
-          ))}
-        </div>
+      <div className="flex flex-wrap gap-2">
+        {p.tech.slice(0, 5).map((t) => (
+          <span
+            key={t}
+            className="
+              rounded-full border border-white/10 bg-white/5
+              px-3 py-1 text-[11px] text-white/70
+            "
+          >
+            {t}
+          </span>
+        ))}
       </div>
-    </a>
+    </Wrapper>
   );
 }
 
 export default function ProjectsSection() {
-  // ✅ Replace with your real projects + links + assets
-  const projects: Project[] = useMemo(
-    () => [
-      {
-        title: "DocuWrangler",
-        description:
-          "Multimodal RAG app that indexes PDFs into a vector store and returns grounded answers with cited references through a chat UI.",
-        href: "https://github.com/yourname/docuwrangler",
-        imageSrc: "/projects/docu-thumb.png",
-        videoSrc: "/projects/docu-preview.mp4",
-        tags: ["React", "Python", "RAG", "Vector DB"],
-      },
-      {
-        title: "Virtual Try-On (3D)",
-        description:
-          "3D virtual try-on experience that renders outfits on models and explores generative personalization for inclusive fashion UX.",
-        href: "https://github.com/yourname/virtual-tryon",
-        imageSrc: "/projects/tryon-thumb.png",
-        videoSrc: "/projects/tryon-preview.mp4",
-        tags: ["Three.js", "AWS", "GenAI", "UI/UX"],
-      },
-      {
-        title: "Predictive Maintenance",
-        description:
-          "ML pipeline for anomaly detection and failure prediction on large-scale telemetry, built for reliable monitoring and analysis.",
-        href: "https://github.com/yourname/predictive-maintenance",
-        imageSrc: "/projects/pdm-thumb.png",
-        videoSrc: "/projects/pdm-preview.mp4",
-        tags: ["Python", "Azure", "ML", "Pandas"],
-      },
-      {
-        title: "Sentiment Market Insights",
-        description:
-          "NLP dashboard that aggregates sentiment signals and surfaces trends for faster decision-making and analysis workflows.",
-        href: "https://github.com/yourname/sentiment-dashboard",
-        imageSrc: "/projects/sentiment-thumb.png",
-        videoSrc: "/projects/sentiment-preview.mp4",
-        tags: ["NLP", "React", "APIs", "LLMs"],
-      },
-      {
-        title: "E-Commerce Storefront",
-        description:
-          "Full-stack shopping flow with product browsing, cart, and checkout-style interactions focused on performance and UX.",
-        href: "https://github.com/yourname/ecommerce",
-        imageSrc: "/projects/shop-thumb.png",
-        videoSrc: "/projects/shop-preview.mp4",
-        tags: ["React", "Node", "SQL", "Auth"],
-      },
-      {
-        title: "Step Challenge App",
-        description:
-          "Mobile step challenge system with daily sync, reliable uploads, and leaderboard-style engagement features.",
-        href: "https://github.com/yourname/step-challenge",
-        imageSrc: "/projects/steps-thumb.png",
-        videoSrc: "/projects/steps-preview.mp4",
-        tags: ["Flutter", "Firebase", "Cloud Functions", "Realtime"],
-      },
-    ],
-    []
-  );
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const rows = useMemo(() => chunk(projects, 4), []);
+
+  // Scroll progress *through this section* (smooth, reversible, no "re-trigger" flicker)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    // When the section enters the viewport (bottom hits bottom) -> progress 0
+    // When the section leaves the viewport (top hits top) -> progress 1
+    offset: ["start end", "end start"],
+  });
+
+  // Row 1 grows first, then row 2. Adjust ranges if you want earlier/later reveal.
+  const row1Scale = useTransform(scrollYProgress, [0.05, 0.28], [0.9, 1]);
+  const row1Opacity = useTransform(scrollYProgress, [0.03, 0.18], [0, 1]);
+
+  const row2Scale = useTransform(scrollYProgress, [0.28, 0.6], [0.9, 1]);
+  const row2Opacity = useTransform(scrollYProgress, [0.26, 0.42], [0, 1]);
 
   return (
-    <section id="projects" className="mx-auto max-w-5xl px-6 py-16">
-      <h2 className="text-3xl font-semibold text-white text-center">
+    <section ref={sectionRef} id="projects" className="mx-auto max-w-7xl px-6 py-28">
+      <h2 className="mb-16 text-center text-3xl font-semibold text-white">
         Projects
       </h2>
 
-      <p className="mx-auto mt-3 max-w-2xl text-center text-white/60 text-[15px]">
-        Selected work with product polish, performance focus, and production-grade execution.
-      </p>
+      {/* ✅ row-by-row grow-on-scroll; reverses naturally when scrolling up */}
+      <div className="space-y-10">
+        <motion.div
+          className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          style={{
+            scale: row1Scale,
+            opacity: row1Opacity,
+            transformOrigin: "top center",
+            willChange: "transform, opacity",
+          }}
+        >
+          {rows[0]?.map((p) => (
+            <Card key={p.title} p={p} />
+          ))}
+        </motion.div>
 
-      <div
-        className="
-          mt-10 grid gap-5
-          grid-cols-1
-          md:grid-cols-2
-          lg:grid-cols-3
-        "
-      >
-        {projects.map((p) => (
-          <ProjectCard key={p.title} p={p} />
-        ))}
+        <motion.div
+          className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          style={{
+            scale: row2Scale,
+            opacity: row2Opacity,
+            transformOrigin: "top center",
+            willChange: "transform, opacity",
+          }}
+        >
+          {rows[1]?.map((p) => (
+            <Card key={p.title} p={p} />
+          ))}
+        </motion.div>
       </div>
     </section>
   );
