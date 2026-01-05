@@ -1,64 +1,32 @@
 export default function AboutSection() {
   return (
-    <section
-      id="about"
-      className="
-        mx-auto
-        max-w-5xl
-        px-6
-        pt-6
-        pb-24
-      "
-    >
-    <div className="mx-auto max-w-3xl text-center">
-        <p className="text-xs font-semibold tracking-[0.22em] text-white/45">
-          ABOUT
+    <section id="about" className="mx-auto max-w-3xl px-6 py-16">
+      <h2 className="text-3xl font-semibold text-white text-center">
+        About
+      </h2>
+
+      <div className="mt-10 space-y-6 text-center text-[15px] leading-relaxed text-white/70">
+        <p>
+          A product focused software engineer with a strong full stack foundation
+          and experience building production ready systems in fast moving
+          environments. Work is driven by a deep interest in how users interact
+          with systems and how thoughtful engineering decisions translate into
+          reliability, clarity, and long term impact.
         </p>
 
-        <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-          Building reliable systems with product focus.
-        </h2>
-
-        <p className="mt-5 text-base leading-relaxed text-white/65 sm:text-lg">
-          I’m a software engineer with a strong full-stack foundation and
-          experience shipping production-ready systems in fast-moving
-          environments. I’ve built and owned features end to end, improved
-          reliability, and made engineering decisions based on direct user
-          feedback loops, since users surface constraints and priorities that no
-          spec fully captures. I adapt quickly by understanding systems deeply,
-          which helps me debug effectively and deliver with efficiency.
+        <p>
+          Strong belief in user informed engineering where real usage, feedback,
+          and constraints shape technical decisions. Problems are approached by
+          digging into details, understanding tradeoffs, and iterating with
+          intention rather than overengineering.
         </p>
 
-        <p className="mt-4 text-base leading-relaxed text-white/65 sm:text-lg">
-          I’m especially interested in building scalable, maintainable software
-          that serves real communities and creates tangible impact.
+        <p>
+          Comfortable operating in ambiguous situations that require quick
+          reasoning, adaptability, and learning on the go. Curiosity and a
+          systems mindset enable fast ramp up, efficient execution, and
+          continuous improvement across projects and teams.
         </p>
-
-        {/* Optional: small “metrics chips” row (looks senior, not noisy) */}
-        <div className="mt-8 flex flex-wrap justify-center gap-2">
-
-          {[
-            "Full-stack",
-            "Systems thinking",
-            "Reliability",
-            "Product engineering",
-            "Fast iteration",
-          ].map((tag) => (
-            <span
-              key={tag}
-              className="
-                rounded-full
-                border border-white/10
-                bg-white/5
-                px-3 py-1
-                text-xs font-medium
-                text-white/60
-              "
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
       </div>
     </section>
   );

@@ -17,8 +17,7 @@ export default function HeroSection() {
         pb-16
       "
     >
-      {/* Interactive background fills entire hero (including behind navbar)
-          Make sure App.tsx DOES NOT add pt-24 to <main> */}
+      {/* Interactive background fills entire hero (including behind navbar) */}
       <HeroGravityBG className="opacity-70" />
 
       {/* Content (pushed down so it clears navbar) */}
@@ -33,9 +32,10 @@ export default function HeroSection() {
           Software Engineer
         </p>
 
-        {/* Tagline */}
-        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg">
-          I build highly efficient, functional systems — with a knack for AI.
+        {/* Tagline (updated: no "I", no em dash) */}
+        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
+          Building high performance, accessible, and thoughtfully designed web
+          systems with a strong focus on usability and scale.
         </p>
 
         {/* CTAs */}
@@ -106,15 +106,16 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Scroll hint (below buttons, but still inside the centered container) */}
+        {/* Scroll hint (brighter) */}
         <div className="mt-14">
           <div
             className="
               mx-auto h-0 w-0
-              border-l-[6px] border-r-[6px] border-t-[8px]
+              border-l-[7px] border-r-[7px] border-t-[9px]
               border-l-transparent border-r-transparent
-              border-t-white/40
+              border-t-white/70
               animate-pulse
+              drop-shadow-[0_0_6px_rgba(255,255,255,0.35)]
             "
           />
         </div>

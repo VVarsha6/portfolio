@@ -10,7 +10,6 @@ export default function Navbar() {
       { id: "projects", label: "Projects" },
       { id: "skills", label: "Skills" },
       { id: "experience", label: "Experience" },
-      { id: "doodle", label: "Fun" },
     ],
     []
   );
@@ -23,8 +22,13 @@ export default function Navbar() {
 
   const NAV_OFFSET = 110;
 
+  // pill padding (before/after text)
   const PILL_PAD_LEFT = 20;
-  const PILL_PAD_RIGHT = 1;
+  const PILL_PAD_RIGHT = 8; // ⬅️ slightly more natural than 1
+
+  // prevent scrollspy from fighting a click scroll
+  const clickingRef = useRef(false);
+  const clickTimeoutRef = useRef<number | null>(null);
 
   const recalcPill = () => {
     const nav = navRef.current;
@@ -32,13 +36,10 @@ export default function Navbar() {
     if (!nav || !btn) return;
 
     const navRect = nav.getBoundingClientRect();
-
     const span = btn.querySelector("span");
     const rect = span?.getBoundingClientRect() ?? btn.getBoundingClientRect();
 
     const width = Math.ceil(rect.width + PILL_PAD_LEFT + PILL_PAD_RIGHT);
-
-    // We compute left so that the pill has PILL_PAD_LEFT before the text
     const left = Math.round(rect.left - navRect.left - PILL_PAD_LEFT);
 
     setPill({ left, width });
@@ -46,6 +47,7 @@ export default function Navbar() {
 
   useLayoutEffect(() => {
     recalcPill();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);
 
   useEffect(() => {
@@ -59,10 +61,51 @@ export default function Navbar() {
       window.removeEventListener("resize", onResize);
       ro?.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);
+
+  // ✅ ScrollSpy: update activeId as you scroll
+  useEffect(() => {
+    const sections = items
+      .map((i) => document.getElementById(i.id))
+      .filter(Boolean) as HTMLElement[];
+
+    if (!sections.length) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (clickingRef.current) return;
+
+        // choose most visible section
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort(
+            (a, b) =>
+              (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0)
+          )[0];
+
+        if (visible?.target?.id) setActiveId(visible.target.id);
+      },
+      {
+        // tune these margins to your taste
+        // makes the next section become "active" before it fully reaches the top
+        rootMargin: "-35% 0px -55% 0px",
+        threshold: [0.12, 0.2, 0.3, 0.4, 0.5],
+      }
+    );
+
+    sections.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, [items]);
 
   function handleClick(id: string) {
     setActiveId(id);
+
+    clickingRef.current = true;
+    if (clickTimeoutRef.current) window.clearTimeout(clickTimeoutRef.current);
+    clickTimeoutRef.current = window.setTimeout(() => {
+      clickingRef.current = false;
+    }, 700);
 
     if (id === "home") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -112,8 +155,7 @@ export default function Navbar() {
             <button
               key={item.id}
               ref={(el) => {
-                // ✅ TS fix: return void, not el
-                btnRefs.current[item.id] = el;
+                btnRefs.current[item.id] = el; // ✅ TS-safe (returns void)
               }}
               type="button"
               onClick={() => handleClick(item.id)}
@@ -122,11 +164,7 @@ export default function Navbar() {
                 whitespace-nowrap rounded-full
                 px-4 py-2 text-sm font-medium
                 transition-colors duration-200
-                ${
-                  isActive
-                    ? "text-sky-300"
-                    : "text-white/55 hover:text-sky-300"
-                }
+                ${isActive ? "text-sky-300" : "text-white/55 hover:text-sky-300"}
                 focus:outline-none
               `}
               aria-current={isActive ? "page" : undefined}
