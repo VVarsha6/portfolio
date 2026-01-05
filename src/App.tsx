@@ -1,28 +1,37 @@
 import Navbar from "./components/layout/Navbar";
 import HeroSection from "./sections/HeroSection";
-
-function Section({ id, title }: { id: string; title: string }) {
-  return (
-    <section id={id} className="mx-auto max-w-5xl px-6 py-24">
-      <h2 className="text-3xl font-semibold text-white">{title}</h2>
-      <div className="mt-6 h-40 rounded-2xl border border-white/10 bg-white/5" />
-    </section>
-  );
-}
+import AboutSection from "./sections/AboutSection";
+import ExperienceSection from "./sections/ExperienceSection";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-950 to-indigo-950 text-white">
+    <div className="min-h-screen bg-space text-white">
       <Navbar />
 
-      <div className="pt-24">
+      {/* Offset for fixed navbar */}
+      <main>
+
         <HeroSection />
-        <Section id="about" title="About" />
-        <Section id="projects" title="Projects" />
-        <Section id="skills" title="Skills" />
-        <Section id="experience" title="Experience" />
-        <Section id="doodle" title="Doodle" />
-      </div>
+        <AboutSection />
+        <ExperienceSection />
+
+        {/* Placeholders for now */}
+        <section id="projects" className="mx-auto max-w-5xl px-6 py-24">
+          <h2 className="text-3xl font-semibold">Projects</h2>
+        </section>
+
+        <section id="skills" className="mx-auto max-w-5xl px-6 py-24">
+          <h2 className="text-3xl font-semibold">Skills</h2>
+        </section>
+
+        <section id="experience" className="mx-auto max-w-5xl px-6 py-24">
+          <h2 className="text-3xl font-semibold">Experience</h2>
+        </section>
+
+        <section id="doodle" className="mx-auto max-w-5xl px-6 py-24">
+          <h2 className="text-3xl font-semibold">Doodle</h2>
+        </section>
+      </main>
     </div>
   );
 }

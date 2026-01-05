@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* --- Space-black glossy background with centered blue glow --- */
+
+.bg-space {
+  background:
+    /* center blue glow */
+    radial-gradient(
+      900px 600px at 50% 40%,
+      rgba(56, 189, 248, 0.14),
+      transparent 60%
+    ),
+
+    /* subtle sheen highlights */
+    radial-gradient(
+      1200px 800px at 20% 10%,
+      rgba(255, 255, 255, 0.04),
+      transparent 55%
+    ),
+    radial-gradient(
+      1000px 700px at 80% 20%,
+      rgba(255, 255, 255, 0.03),
+      transparent 60%
+    ),
+
+    /* base black gradient */
+    linear-gradient(
+      180deg,
+      #04060a 0%,
+      #05070b 45%,
+      #030409 100%
+    );
+}
