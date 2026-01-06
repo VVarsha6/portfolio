@@ -92,7 +92,6 @@ function clampIndex(n: number, len: number) {
   return ((n % len) + len) % len;
 }
 
-/** Mobile detector */
 function useIsMobile(breakpointPx = 640) {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -133,11 +132,21 @@ function CardMedia({
   }, [active, hasMultiple, sources.length]);
 
   return (
-    <div className="relative mb-5 aspect-video overflow-hidden rounded-xl bg-black/[0.06] ring-1 ring-black/10 dark:bg-black/35 dark:ring-white/10">
+    <div
+      className="
+        relative mb-5 aspect-video overflow-hidden rounded-xl
+        bg-black/[0.06] ring-1 ring-black/10
+        dark:bg-black/35 dark:ring-white/10
+      "
+    >
       <img
         src={sources[idx]}
         alt={title}
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+        className="
+          absolute inset-0 h-full w-full object-cover
+          transition-transform duration-300
+          group-hover:scale-[1.04]
+        "
         loading="lazy"
         draggable={false}
       />
@@ -163,7 +172,8 @@ function Card({ p }: { p: Project }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="
-        group relative rounded-2xl
+        group relative h-full
+        rounded-2xl
         border border-black/15 bg-black/[0.035]
         p-5 transition-colors duration-200
         hover:bg-black/[0.055]
@@ -174,7 +184,11 @@ function Card({ p }: { p: Project }) {
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
       <div
-        className="pointer-events-none absolute -inset-[2px] rounded-[20px] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+        className="
+          pointer-events-none absolute -inset-[2px] rounded-[20px]
+          opacity-0 transition-opacity duration-200
+          group-hover:opacity-100 group-focus-visible:opacity-100
+        "
         style={{
           boxShadow:
             "0 0 0 2px rgba(56,189,248,0.92), 0 0 40px rgba(56,189,248,0.38), 0 0 70px rgba(56,189,248,0.18)",
@@ -197,7 +211,13 @@ function Card({ p }: { p: Project }) {
         {p.tech.slice(0, 5).map((t) => (
           <span
             key={t}
-            className="rounded-full border border-black/15 bg-black/[0.04] px-3 py-1 text-[11px] text-black/75 dark:border-white/20 dark:bg-white/10 dark:text-white/85"
+            className="
+              relative inline-flex items-center justify-center
+              rounded-full border
+              border-black/15 bg-black/[0.04]
+              px-3 py-1 text-[11px] text-black/75
+              dark:border-white/20 dark:bg-white/10 dark:text-white/85
+            "
           >
             {t}
           </span>
@@ -214,13 +234,14 @@ function useRowMotion(targetRef: React.RefObject<HTMLElement | null>) {
   });
 
   return {
-    scale: useTransform(scrollYProgress, [0, 0.5, 1], [0.82, 1, 0.86]),
+    // Keep it gentle so 2x2 doesn’t look “small”
+    scale: useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.98]),
     opacity: useTransform(
       scrollYProgress,
       [0, 0.35, 0.5, 0.82, 1],
-      [0.25, 0.75, 1, 0.7, 0.45]
+      [0.55, 0.85, 1, 0.85, 0.7]
     ),
-    y: useTransform(scrollYProgress, [0, 0.5, 1], [22, 0, -10]),
+    y: useTransform(scrollYProgress, [0, 0.5, 1], [10, 0, -6]),
   };
 }
 
@@ -230,6 +251,7 @@ export default function ProjectsSection() {
   const rows = useMemo(() => chunk(projects, 4), []);
   const row1Ref = useRef<HTMLDivElement | null>(null);
   const row2Ref = useRef<HTMLDivElement | null>(null);
+
   const row1 = useRowMotion(row1Ref);
   const row2 = useRowMotion(row2Ref);
 
@@ -241,19 +263,24 @@ export default function ProjectsSection() {
 
       <div className="space-y-12 sm:space-y-14">
         {isMobile ? (
-          /* ✅ Mobile: NO animation, simple readable list */
+          // ✅ Mobile: static list (no animation)
           <div className="grid gap-8">
             {projects.map((p) => (
               <Card key={p.title} p={p} />
             ))}
           </div>
         ) : (
-          /* ✅ Desktop: unchanged animated rows */
+          // ✅ Desktop: ALWAYS row animation,
+          // but grid becomes 2x2 until XL, then 4-in-a-row.
           <>
             <motion.div
               ref={row1Ref}
               style={row1}
-              className="grid gap-8 sm:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              className="
+                grid gap-8 sm:gap-10
+                grid-cols-2        /* ✅ 2x2 when screen shrinks */
+                xl:grid-cols-4     /* ✅ 4 in a row only on XL */
+              "
             >
               {rows[0]?.map((p) => (
                 <Card key={p.title} p={p} />
@@ -263,7 +290,11 @@ export default function ProjectsSection() {
             <motion.div
               ref={row2Ref}
               style={row2}
-              className="grid gap-8 sm:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              className="
+                grid gap-8 sm:gap-10
+                grid-cols-2
+                xl:grid-cols-4
+              "
             >
               {rows[1]?.map((p) => (
                 <Card key={p.title} p={p} />
