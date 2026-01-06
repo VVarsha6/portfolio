@@ -11,10 +11,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         transition-colors duration-300
         pt-20 sm:pt-24
       "
-    >
-      <div className="fixed bottom-4 right-4 z-[999] sm:bottom-5 sm:right-5">
+>
+  <div
+  className="
+    fixed z-[9999]
+    right-4 bottom-4
+    sm:right-5 sm:bottom-5
+    bottom-[calc(env(safe-area-inset-bottom)+1rem)]
+    right-[calc(env(safe-area-inset-right)+1rem)]
+  "
+>
   <ThemeToggle />
 </div>
+
 
 
       {children}
