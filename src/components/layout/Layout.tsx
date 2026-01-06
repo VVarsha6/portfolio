@@ -9,13 +9,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         dark:bg-[#0e141b] dark:text-white/90
         bg-space
         transition-colors duration-300
+        pt-20 sm:pt-24
       "
     >
-      <div className="fixed right-5 top-5 z-[999]">
+      <div className="fixed right-4 top-4 z-[999] sm:right-5 sm:top-5">
         <ThemeToggle />
       </div>
 
-      {/* App content */}
       {children}
     </div>
   );

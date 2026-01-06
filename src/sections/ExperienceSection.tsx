@@ -48,17 +48,14 @@ export default function ExperienceSection() {
   );
 
   return (
-    <section id="experience" className="mx-auto max-w-5xl px-6 py-14">
+    <section id="experience" className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
       <h2 className="text-3xl font-semibold text-black/90 dark:text-white/95 text-center">
         Experience
       </h2>
 
       <div className="mt-10 space-y-4">
         {items.map((item, idx) => (
-          <div
-            key={`${item.org}-${item.date}-${idx}`}
-            className="group relative"
-          >
+          <div key={`${item.org}-${item.date}-${idx}`} className="group relative">
             {/* Left indicator */}
             <div className="pointer-events-none absolute left-0 top-6 hidden -translate-x-6 sm:block">
               <div

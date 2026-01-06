@@ -20,18 +20,12 @@ export default function Navbar() {
   const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [pill, setPill] = useState({ left: 0, width: 0 });
 
-  // scroll offset that matches your click scroll
   const NAV_OFFSET = 110;
-
-  // pill padding
   const PILL_PAD_LEFT = 20;
   const PILL_PAD_RIGHT = 8;
 
-  // prevents scrollspy from fighting while click-scrolling
   const clickingRef = useRef(false);
   const clickTimeoutRef = useRef<number | null>(null);
-
-  // RAF throttle for scroll
   const rafRef = useRef<number | null>(null);
 
   const recalcPill = () => {
@@ -40,7 +34,6 @@ export default function Navbar() {
     if (!nav || !btn) return;
 
     const navRect = nav.getBoundingClientRect();
-
     const span = btn.querySelector("span");
     const rect = span?.getBoundingClientRect() ?? btn.getBoundingClientRect();
 
@@ -69,7 +62,6 @@ export default function Navbar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);
 
-  // ✅ ScrollSpy: choose section whose top is closest to NAV_OFFSET line
   useEffect(() => {
     const getSections = () =>
       items
@@ -79,7 +71,6 @@ export default function Navbar() {
     const pickActive = () => {
       if (clickingRef.current) return;
 
-      // Special case: near very top -> Home
       if (window.scrollY < 10) {
         if (activeId !== "home") setActiveId("home");
         return;
@@ -88,16 +79,14 @@ export default function Navbar() {
       const sections = getSections();
       if (!sections.length) return;
 
-      // The reference line: where we consider "active" (just under navbar)
       const line = NAV_OFFSET + 1;
 
       let bestId = sections[0].id;
       let bestDist = Number.POSITIVE_INFINITY;
 
       for (const s of sections) {
-        const top = s.getBoundingClientRect().top; // relative to viewport
+        const top = s.getBoundingClientRect().top;
         const dist = Math.abs(top - line);
-
         const isCandidate = top <= line + 120;
 
         if (isCandidate && dist < bestDist) {
@@ -105,8 +94,6 @@ export default function Navbar() {
           bestId = s.id;
         }
       }
-
-      if (!bestId) bestId = "home";
 
       if (bestId && bestId !== activeId) setActiveId(bestId);
     };
@@ -120,7 +107,6 @@ export default function Navbar() {
     };
 
     pickActive();
-
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
 
@@ -154,66 +140,71 @@ export default function Navbar() {
   }
 
   return (
-    <div className="fixed left-1/2 top-6 z-50 -translate-x-1/2">
+    <div className="fixed left-1/2 top-3 z-50 w-[94vw] -translate-x-1/2 sm:top-6 sm:w-auto">
       <nav
         ref={navRef}
         className="
-          relative inline-flex items-center gap-1
-          rounded-full border border-black/10
-          bg-white/70 backdrop-blur-xl
+          relative flex items-center
+          rounded-full
+          border border-black/10 bg-white/70
+          dark:border-white/10 dark:bg-zinc-950/60
+          backdrop-blur-xl
           px-2 py-2
           shadow-[0_10px_30px_rgba(0,0,0,0.18)]
-          max-w-[92vw]
-          dark:border-white/10
-          dark:bg-zinc-950/60
           dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]
+          max-w-full
         "
         aria-label="Primary"
       >
-        {/* Active pill */}
-        <div
-          className="
-            absolute rounded-full
-            bg-black/[0.05] ring-1 ring-black/10
-            transition-all duration-300 ease-out
-            dark:bg-white/10 dark:ring-white/10
-          "
-          style={{
-            transform: `translateX(${pill.left}px)`,
-            width: `${pill.width}px`,
-            top: "6px",
-            bottom: "6px",
-          }}
-        />
+        {/* Scroll container so labels never spill out on mobile */}
+        <div className="relative flex w-full items-center overflow-x-auto no-scrollbar">
+          {/* Active pill */}
+          <div
+            className="
+              absolute rounded-full
+              bg-black/5 ring-1 ring-black/10
+              dark:bg-white/10 dark:ring-white/10
+              transition-all duration-300 ease-out
+            "
+            style={{
+              transform: `translateX(${pill.left}px)`,
+              width: `${pill.width}px`,
+              top: "6px",
+              bottom: "6px",
+            }}
+          />
 
-        {items.map((item) => {
-          const isActive = item.id === activeId;
+          <div className="relative z-10 flex items-center gap-1 pr-1">
+            {items.map((item) => {
+              const isActive = item.id === activeId;
 
-          return (
-            <button
-              key={item.id}
-              ref={(el) => {
-                btnRefs.current[item.id] = el;
-              }}
-              type="button"
-              onClick={() => handleClick(item.id)}
-              className={`
-                relative z-10 whitespace-nowrap rounded-full
-                px-4 py-2 text-sm font-medium
-                transition-colors duration-200
-                ${
-                  isActive
-                    ? "text-sky-500 dark:text-sky-300"
-                    : "text-black/60 hover:text-sky-500 dark:text-white/55 dark:hover:text-sky-300"
-                }
-                focus:outline-none
-              `}
-              aria-current={isActive ? "page" : undefined}
-            >
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
+              return (
+                <button
+                  key={item.id}
+                  ref={(el) => {
+                    btnRefs.current[item.id] = el;
+                  }}
+                  type="button"
+                  onClick={() => handleClick(item.id)}
+                  className={`
+                    whitespace-nowrap rounded-full
+                    px-3 py-2 text-[13px] sm:px-4 sm:text-sm
+                    font-medium transition-colors duration-200
+                    ${
+                      isActive
+                        ? "text-sky-500 dark:text-sky-300"
+                        : "text-black/60 hover:text-sky-600 dark:text-white/55 dark:hover:text-sky-300"
+                    }
+                    focus:outline-none
+                  `}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </nav>
     </div>
   );

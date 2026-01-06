@@ -32,3 +32,5 @@
       #0d0e16 100%
     );
 }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

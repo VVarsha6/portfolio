@@ -1,11 +1,14 @@
 export default function AboutSection() {
   return (
-    <section id="about" className="mx-auto max-w-3xl px-6 py-16">
+    <section
+      id="about"
+      className="mx-auto max-w-3xl px-6 py-10 sm:py-16"
+    >
       <h2 className="text-3xl font-semibold text-black/90 dark:text-white text-center">
         About
       </h2>
 
-      <div className="mt-10 space-y-6 text-center text-[15px] leading-relaxed text-black/70 dark:text-white/70">
+      <div className="mt-8 sm:mt-10 space-y-6 text-center text-[15px] leading-relaxed text-black/70 dark:text-white/70">
         <p>
           A product focused software engineer with a strong full stack foundation
           and experience building production ready systems in fast moving

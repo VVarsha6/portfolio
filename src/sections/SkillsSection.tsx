@@ -26,7 +26,6 @@ export default function SkillsSection() {
 
   const sectionRef = useRef<HTMLElement | null>(null);
 
-  // Measure final layout height (invisible)
   const measureRef = useRef<HTMLDivElement | null>(null);
   const [fixedHeight, setFixedHeight] = useState<number | null>(null);
 
@@ -79,13 +78,12 @@ export default function SkillsSection() {
     <section
       id="skills"
       ref={sectionRef}
-      className="mx-auto max-w-7xl px-6 pt-20 pb-40"
+      className="mx-auto max-w-7xl px-6 py-16 sm:py-24"
     >
       <h2 className="text-3xl font-semibold text-black/90 dark:text-white/95 text-center">
         Skills
       </h2>
 
-      {/* Invisible measurement layout (for height lock, no layout shift) */}
       <div className="pointer-events-none absolute -left-[9999px] top-0 opacity-0">
         <div ref={measureRef} className="flex flex-wrap justify-center gap-4">
           {skills.map((skill) => (
@@ -107,7 +105,6 @@ export default function SkillsSection() {
         </div>
       </div>
 
-      {/* Visible skills */}
       <div
         className="mt-12 flex flex-wrap justify-center gap-4"
         style={{ height: fixedHeight ?? undefined }}
@@ -128,7 +125,6 @@ export default function SkillsSection() {
           >
             {skill}
 
-            {/* Neon outline glow — outline only */}
             <span
               className="
                 pointer-events-none absolute -inset-[1px]

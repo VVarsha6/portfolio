@@ -3,10 +3,8 @@ import NeonButton from "../components/ui/NeonButton";
 import HeroGravityBG from "../components/ui/HeroGravityBG";
 
 const iconClass =
-  "h-4 w-4 transition-colors duration-200 group-hover:text-sky-400 dark:group-hover:text-sky-200";
-
-const textClass =
-  "transition-colors duration-200 group-hover:text-black dark:group-hover:text-white";
+  "h-4 w-4 transition-colors duration-200 group-hover:text-sky-200";
+const textClass = "transition-colors duration-200 group-hover:text-white";
 
 export default function HeroSection() {
   return (
@@ -16,16 +14,23 @@ export default function HeroSection() {
         relative
         w-full
         min-h-screen
+        pt-0
         pb-16
       "
     >
-      {/* Interactive background */}
+      {/* Background starts from TOP of page */}
       <HeroGravityBG className="opacity-80" />
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-5xl px-6 pt-40 translate-y-20 text-center">
+      {/* Content: pushed down so it clears navbar */}
+      <div
+        className="
+          relative z-10 mx-auto max-w-5xl px-6
+          pt-28 sm:pt-36
+          text-center
+        "
+      >
         {/* Name */}
-        <h1 className="text-4xl font-semibold tracking-tight text-black/90 dark:text-white sm:text-6xl">
+        <h1 className="text-4xl font-semibold tracking-tight text-black/95 dark:text-white sm:text-6xl">
           Varsha Viswanathan
         </h1>
 
@@ -35,7 +40,7 @@ export default function HeroSection() {
         </p>
 
         {/* Tagline */}
-        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-black/65 dark:text-white/65 sm:text-lg">
+        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-black/60 dark:text-white/65 sm:text-lg">
           Building high performance, accessible, and thoughtfully designed web
           systems with a strong focus on usability and scale.
         </p>
@@ -45,13 +50,12 @@ export default function HeroSection() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             {/* Resume */}
             <NeonButton
-              href="/assets/resume.pdf"
+              href="/src/assets/resume.pdf"
               download
               className="
-                group
-                bg-black/[0.05] px-6 py-3
-                text-sm font-semibold text-black/85
-                hover:bg-black/[0.08]
+                group bg-black/[0.04] px-6 py-3
+                text-sm font-semibold text-black/80
+                hover:bg-black/[0.07]
                 dark:bg-white/10 dark:text-white/85 dark:hover:bg-white/12
               "
             >
@@ -67,10 +71,9 @@ export default function HeroSection() {
               ariaLabel="LinkedIn"
               title="LinkedIn"
               className="
-                group
-                bg-black/[0.04] px-4 py-3
-                text-sm font-medium text-black/65
-                hover:bg-black/[0.07]
+                group bg-black/[0.03] px-4 py-3
+                text-sm font-medium text-black/70
+                hover:bg-black/[0.06]
                 dark:bg-white/5 dark:text-white/70 dark:hover:bg-white/10
               "
             >
@@ -86,10 +89,9 @@ export default function HeroSection() {
               ariaLabel="GitHub"
               title="GitHub"
               className="
-                group
-                bg-black/[0.04] px-4 py-3
-                text-sm font-medium text-black/65
-                hover:bg-black/[0.07]
+                group bg-black/[0.03] px-4 py-3
+                text-sm font-medium text-black/70
+                hover:bg-black/[0.06]
                 dark:bg-white/5 dark:text-white/70 dark:hover:bg-white/10
               "
             >
@@ -103,10 +105,9 @@ export default function HeroSection() {
               ariaLabel="Email"
               title="Email"
               className="
-                group
-                bg-black/[0.04] px-4 py-3
-                text-sm font-medium text-black/65
-                hover:bg-black/[0.07]
+                group bg-black/[0.03] px-4 py-3
+                text-sm font-medium text-black/70
+                hover:bg-black/[0.06]
                 dark:bg-white/5 dark:text-white/70 dark:hover:bg-white/10
               "
             >
@@ -126,8 +127,7 @@ export default function HeroSection() {
               border-t-black/60
               dark:border-t-white/70
               animate-pulse
-              drop-shadow-[0_0_6px_rgba(0,0,0,0.25)]
-              dark:drop-shadow-[0_0_6px_rgba(255,255,255,0.35)]
+              drop-shadow-[0_0_6px_rgba(255,255,255,0.35)]
             "
           />
         </div>
