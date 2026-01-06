@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         pt-20 sm:pt-24
       "
     >
-      <div className="fixed right-4 top-4 z-[999] sm:right-5 sm:top-5">
+      <div className="fixed right-4 bototm-4 z-[999] sm:right-5 sm:bottom-5">
         <ThemeToggle />
       </div>
 
