@@ -110,29 +110,23 @@ function CardMedia({
 
   useEffect(() => {
     if (!active || !hasMultiple) return;
-
-    const t = window.setInterval(() => {
-      setIdx((prev) => clampIndex(prev + 1, sources.length));
-    }, 1100);
-
+    const t = window.setInterval(
+      () => setIdx((p) => clampIndex(p + 1, sources.length)),
+      1100
+    );
     return () => window.clearInterval(t);
   }, [active, hasMultiple, sources.length]);
 
   return (
-    <div className="relative mb-5 aspect-video overflow-hidden rounded-xl bg-black/35">
+    <div className="relative mb-5 aspect-video overflow-hidden rounded-xl bg-black/20 dark:bg-black/35">
       <img
         src={sources[idx]}
         alt={title}
-        className="
-          absolute inset-0 h-full w-full object-cover
-          transform-gpu transition duration-300 ease-out
-          group-hover:scale-[1.04]
-        "
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
         loading="lazy"
         draggable={false}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0 opacity-90" />
-      <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-white/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0" />
     </div>
   );
 }
@@ -141,9 +135,10 @@ function Card({ p }: { p: Project }) {
   const Wrapper: any = p.link ? motion.a : motion.div;
   const [hovered, setHovered] = useState(false);
 
-  const sources = useMemo(() => {
-    return p.images?.length ? p.images : p.image ? [p.image] : [];
-  }, [p.images, p.image]);
+  const sources = useMemo(
+    () => (p.images?.length ? p.images : p.image ? [p.image] : []),
+    [p.images, p.image]
+  );
 
   return (
     <Wrapper
@@ -153,47 +148,32 @@ function Card({ p }: { p: Project }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="
-        group relative block rounded-2xl border border-white/15 bg-white/10 p-5
-        transition-colors duration-200 hover:bg-white/12 focus:outline-none
+        group relative rounded-2xl
+        border border-black/15 bg-black/[0.05]
+        p-5 transition-colors
+        hover:bg-black/[0.07]
+        dark:border-white/15 dark:bg-white/10 dark:hover:bg-white/12
       "
       whileHover={p.link ? { y: -6, scale: 1.02 } : undefined}
-      transition={{ duration: 0.2, ease: "easeOut" }}
     >
-      {/* Neon glow behind the card on hover */}
+      {/* Neon outline */}
       <div
-        className="
-          pointer-events-none absolute -inset-3 rounded-[22px]
-          opacity-0 blur-2xl transition-opacity duration-200
-          group-hover:opacity-100
-        "
-        style={{
-          background:
-            "radial-gradient(60% 60% at 50% 40%, rgba(56,189,248,0.22), rgba(56,189,248,0.06) 55%, transparent 70%)",
-        }}
-      />
-
-      {/* Crisp neon outline */}
-      <div
-        className="
-          pointer-events-none absolute -inset-[1px] rounded-[18px]
-          opacity-0 transition-opacity duration-200
-          group-hover:opacity-100 group-focus-visible:opacity-100
-        "
+        className="pointer-events-none absolute -inset-[2px] rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity"
         style={{
           boxShadow:
-            "0 0 0 1px rgba(56,189,248,0.7), 0 0 30px rgba(56,189,248,0.22)",
+            "0 0 0 2px rgba(56,189,248,0.9), 0 0 36px rgba(56,189,248,0.35)",
         }}
       />
 
-      {sources.length ? (
+      {sources.length > 0 && (
         <CardMedia title={p.title} sources={sources} active={hovered} />
-      ) : null}
+      )}
 
-      <h3 className="mb-2 text-[15px] font-semibold text-white/95 sm:text-base">
+      <h3 className="mb-2 text-[15px] font-semibold text-black/90 dark:text-white/95">
         {p.title}
       </h3>
 
-      <p className="mb-4 text-sm leading-relaxed text-white/80">
+      <p className="mb-4 text-sm leading-relaxed text-black/65 dark:text-white/80">
         {p.description}
       </p>
 
@@ -202,10 +182,9 @@ function Card({ p }: { p: Project }) {
           <span
             key={t}
             className="
-              rounded-full border border-white/20 bg-white/10
-              px-3 py-1 text-[11px] text-white/85
-              transition-colors duration-200
-              group-hover:border-white/25 group-hover:bg-white/12
+              rounded-full border border-black/15 bg-black/[0.04]
+              px-3 py-1 text-[11px] text-black/70
+              dark:border-white/20 dark:bg-white/10 dark:text-white/85
             "
           >
             {t}
@@ -222,70 +201,37 @@ function useRowMotion(targetRef: React.RefObject<HTMLElement | null>) {
     offset: ["center end", "center start"],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.82, 1, 0.86]);
-
-  const opacity = useTransform(
-    scrollYProgress,
-    [0.0, 0.35, 0.5, 0.82, 1.0],
-    [0.25, 0.75, 1.0, 0.7, 0.45]
-  );
-
-  const y = useTransform(scrollYProgress, [0, 0.5, 1], [22, 0, -10]);
-
-  return { scale, opacity, y };
+  return {
+    scale: useTransform(scrollYProgress, [0, 0.5, 1], [0.82, 1, 0.86]),
+    opacity: useTransform(
+      scrollYProgress,
+      [0, 0.35, 0.5, 0.82, 1],
+      [0.25, 0.75, 1, 0.7, 0.45]
+    ),
+    y: useTransform(scrollYProgress, [0, 0.5, 1], [22, 0, -10]),
+  };
 }
 
 export default function ProjectsSection() {
-  const sectionRef = useRef<HTMLElement | null>(null);
   const rows = useMemo(() => chunk(projects, 4), []);
-
   const row1Ref = useRef<HTMLDivElement | null>(null);
   const row2Ref = useRef<HTMLDivElement | null>(null);
-
   const row1 = useRowMotion(row1Ref);
   const row2 = useRowMotion(row2Ref);
 
   return (
-    <section
-      ref={sectionRef}
-      id="projects"
-      className="mx-auto max-w-7xl px-6 py-32"
-    >
-      <h2 className="mb-20 text-center text-3xl font-semibold text-white">
+    <section id="projects" className="mx-auto max-w-7xl px-6 py-32">
+      <h2 className="mb-20 text-center text-3xl font-semibold text-black/90 dark:text-white">
         Projects
       </h2>
 
       <div className="space-y-14">
-        <motion.div
-          ref={row1Ref}
-          className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-          style={{
-            scale: row1.scale,
-            opacity: row1.opacity,
-            y: row1.y,
-            transformOrigin: "center center",
-            willChange: "transform, opacity",
-          }}
-        >
-          {rows[0]?.map((p) => (
-            <Card key={p.title} p={p} />
-          ))}
+        <motion.div ref={row1Ref} style={row1} className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {rows[0]?.map((p) => <Card key={p.title} p={p} />)}
         </motion.div>
 
-        <motion.div
-          ref={row2Ref}
-          className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-          style={{
-            scale: row2.scale,
-            opacity: row2.opacity,
-            y: row2.y,
-            transformOrigin: "center center",
-            willChange: "transform, opacity",
-          }}
-        >
-          {rows[1]?.map((p) => (
-            <Card key={p.title} p={p} />
-          ))}
+        <motion.div ref={row2Ref} style={row2} className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {rows[1]?.map((p) => <Card key={p.title} p={p} />)}
         </motion.div>
       </div>
     </section>

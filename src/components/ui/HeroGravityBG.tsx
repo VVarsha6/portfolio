@@ -33,17 +33,25 @@ export default function HeroGravityBG({ className = "" }: { className?: string }
     const clamp = (v: number, min: number, max: number) =>
       Math.max(min, Math.min(max, v));
 
+    const isLightMode = () => !document.documentElement.classList.contains("dark");
+
     const seedParticles = (w: number, h: number) => {
       const ps: Particle[] = [];
+      const light = isLightMode();
+
       for (let i = 0; i < MAX; i++) {
         ps.push({
           x: Math.random() * w,
-          y: Math.random() * h, // ✅ no navbar avoidance
+          y: Math.random() * h,
           vx: (Math.random() - 0.5) * 0.35,
           vy: (Math.random() - 0.5) * 0.35,
           r: 0.95 + Math.random() * 1.8,
-          // ✅ slightly brighter but controlled
-          a: 0.20 + Math.random() * 0.28, // 0.20..0.48
+
+          // Dark mode: keep your existing range
+          a: light
+            ? 0.30 + Math.random() * 0.34 // 0.30..0.64 (more visible)
+            : 0.20 + Math.random() * 0.28, // 0.20..0.48
+
           seed: Math.random() * 1000,
         });
       }
@@ -95,6 +103,21 @@ export default function HeroGravityBG({ className = "" }: { className?: string }
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("blur", onBlur);
 
+    const onThemeChange = () => {
+      // re-seed alpha values (keeps positions/motion)
+      const light = isLightMode();
+      const ps = particlesRef.current;
+      for (const p of ps) {
+        p.a = light
+          ? 0.30 + Math.random() * 0.34
+          : 0.20 + Math.random() * 0.28;
+      }
+    };
+
+    // Observe <html class="dark"> changes
+    const mo = new MutationObserver(onThemeChange);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
     let last = performance.now();
 
     const tick = (now: number) => {
@@ -111,28 +134,33 @@ export default function HeroGravityBG({ className = "" }: { className?: string }
 
       const ps = particlesRef.current;
 
-      // ✅ Slower + calmer motion
-      const time = now * 0.00045; // slower than before
-      const swim = prefersReduced ? 0.012 : 0.022; // smaller drift
+      const time = now * 0.00045;
+      const swim = prefersReduced ? 0.012 : 0.022;
 
-      // Cursor repel (interactive but not aggressive)
+      // Cursor repel
       const repelRadius = prefersReduced ? 150 : 230;
       const repelStrength = prefersReduced ? 1.0 : 1.6;
 
-      // Light friction so motion stays alive
       const friction = prefersReduced ? 0.996 : 0.991;
 
-      // ✅ More cyan + a touch brighter (still subtle)
-      const CYAN = "34,211,238"; // Tailwind cyan-400 vibe
+      const light = isLightMode();
+
+      // ✅ Color tuning:
+      // Dark mode: cyan pop
+      // Light mode: deeper teal so it reads against white background
+      const RGB = light ? "14,165,233" : "34,211,238"; 
+ // teal-ish vs cyan-400
+
+      // ✅ Glow tuning:
+      const shadowAlpha = light ? 0.75 : 0.55;
+      const shadowBlur = light ? 16 : 10;
 
       for (let i = 0; i < ps.length; i++) {
         const p = ps[i];
 
-        // Gentle swim (independent per particle; no herding)
         p.vx += Math.cos(time + p.seed) * swim * dt;
         p.vy += Math.sin(time * 0.9 + p.seed) * swim * dt;
 
-        // Cursor repel bubble
         if (pointer.current.active) {
           const dx = p.x - pointer.current.x;
           const dy = p.y - pointer.current.y;
@@ -147,23 +175,20 @@ export default function HeroGravityBG({ className = "" }: { className?: string }
           }
         }
 
-        // Integrate
         p.vx *= friction;
         p.vy *= friction;
         p.x += p.vx * dt;
         p.y += p.vy * dt;
 
-        // Wrap inside hero bounds
         if (p.x < -20) p.x = w + 20;
         if (p.x > w + 20) p.x = -20;
         if (p.y < -20) p.y = h + 20;
         if (p.y > h + 20) p.y = -20;
 
-        // Draw (keep glow controlled so text stays readable)
         ctx.beginPath();
-        ctx.fillStyle = `rgba(${CYAN},${p.a})`;
-        ctx.shadowColor = `rgba(${CYAN},0.55)`;
-        ctx.shadowBlur = 10; // controlled glow
+        ctx.fillStyle = `rgba(${RGB},${p.a})`;
+        ctx.shadowColor = `rgba(${RGB},${shadowAlpha})`;
+        ctx.shadowBlur = shadowBlur;
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
       }
@@ -176,6 +201,7 @@ export default function HeroGravityBG({ className = "" }: { className?: string }
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       ro.disconnect();
+      mo.disconnect();
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("blur", onBlur);
     };

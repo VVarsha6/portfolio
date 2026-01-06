@@ -6,35 +6,31 @@ import SkillsSection from "./sections/SkillsSection";
 import ProjectsSection from "./sections/ProjectsSection";
 import Footer from "./sections/Footer";
 import FadeSection from "./components/ui/FadeSection";
-
-
+import Layout from "./components/layout/Layout";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-space text-white/90">
+    <Layout>
       <Navbar />
 
-      {/* Offset for fixed navbar */}
       <main>
         <FadeSection>
-        <HeroSection />
+          <HeroSection />
         </FadeSection>
 
         <FadeSection>
-        <AboutSection />
+          <AboutSection />
         </FadeSection>
-    
+
         <ProjectsSection />
 
         <FadeSection>
-        <SkillsSection />
+          <SkillsSection />
         </FadeSection>
-      
+
         <ExperienceSection />
         <Footer />
-
-
       </main>
-    </div>
+    </Layout>
   );
 }

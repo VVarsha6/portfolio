@@ -81,7 +81,7 @@ export default function SkillsSection() {
       ref={sectionRef}
       className="mx-auto max-w-7xl px-6 pt-20 pb-40"
     >
-      <h2 className="text-3xl font-semibold text-white/95 text-center">
+      <h2 className="text-3xl font-semibold text-black/90 dark:text-white/95 text-center">
         Skills
       </h2>
 
@@ -94,11 +94,11 @@ export default function SkillsSection() {
               className="
                 inline-flex items-center justify-center
                 rounded-full
-                border border-white/20
-                bg-white/10
+                border border-black/15 dark:border-white/20
+                bg-black/[0.04] dark:bg-white/10
                 px-5 py-2.5
                 text-sm font-medium leading-none
-                text-white/85
+                text-black/80 dark:text-white/85
               "
             >
               {skill}
@@ -118,17 +118,17 @@ export default function SkillsSection() {
             className="
               group relative inline-flex items-center justify-center
               rounded-full
-              border border-white/20
-              bg-white/10
+              border border-black/15 dark:border-white/20
+              bg-black/[0.05] dark:bg-white/10
               px-5 py-2.5
               text-sm font-medium leading-none
-              text-white/90
+              text-black/85 dark:text-white/90
               transition-colors duration-200
             "
           >
             {skill}
 
-            {/* Neon outline glow — NO inner bleed */}
+            {/* Neon outline glow — outline only */}
             <span
               className="
                 pointer-events-none absolute -inset-[1px]
@@ -138,7 +138,7 @@ export default function SkillsSection() {
               "
               style={{
                 boxShadow:
-                  "0 0 0 1px rgba(56,189,248,0.75), 0 0 18px rgba(56,189,248,0.35)",
+                  "0 0 0 1px rgba(56,189,248,0.85), 0 0 20px rgba(56,189,248,0.40)",
               }}
             />
           </span>

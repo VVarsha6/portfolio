@@ -27,7 +27,7 @@ export default function PageIntro({ durationMs = 650 }: Props) {
       aria-hidden
       className={[
         "pointer-events-none fixed inset-0 z-[9999]",
-        "bg-zinc-950", // base
+        "bg-white dark:bg-zinc-950", // base
         "transition-opacity duration-500 ease-out",
         hide ? "opacity-0" : "opacity-100",
       ].join(" ")}
@@ -38,7 +38,7 @@ export default function PageIntro({ durationMs = 650 }: Props) {
           className={[
             "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
             "h-[480px] w-[480px] rounded-full",
-            "bg-sky-400/10 blur-3xl",
+            "bg-sky-400/20 dark:bg-sky-400/10 blur-3xl",
             "animate-[introGlow_900ms_ease-out_forwards]",
           ].join(" ")}
         />
@@ -46,7 +46,7 @@ export default function PageIntro({ durationMs = 650 }: Props) {
 
       {/* Tiny “scanline” shimmer (very subtle) */}
       <div className="absolute inset-0 overflow-hidden opacity-40">
-        <div className="absolute -top-24 left-0 h-24 w-full bg-gradient-to-b from-transparent via-white/10 to-transparent animate-[introScan_850ms_ease-out_forwards]" />
+      <div className="absolute -top-24 left-0 h-24 w-full bg-gradient-to-b from-transparent via-black/10 to-transparent dark:via-white/10 animate-[introScan_850ms_ease-out_forwards]" />
       </div>
 
       {/* Blur the page behind during intro (feels premium) */}

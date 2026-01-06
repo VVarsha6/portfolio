@@ -3,8 +3,10 @@ import NeonButton from "../components/ui/NeonButton";
 import HeroGravityBG from "../components/ui/HeroGravityBG";
 
 const iconClass =
-  "h-4 w-4 transition-colors duration-200 group-hover:text-sky-200";
-const textClass = "transition-colors duration-200 group-hover:text-white";
+  "h-4 w-4 transition-colors duration-200 group-hover:text-sky-400 dark:group-hover:text-sky-200";
+
+const textClass =
+  "transition-colors duration-200 group-hover:text-black dark:group-hover:text-white";
 
 export default function HeroSection() {
   return (
@@ -17,23 +19,23 @@ export default function HeroSection() {
         pb-16
       "
     >
-      {/* Interactive background fills entire hero (including behind navbar) */}
+      {/* Interactive background */}
       <HeroGravityBG className="opacity-80" />
 
-      {/* Content (pushed down so it clears navbar) */}
+      {/* Content */}
       <div className="relative z-10 mx-auto max-w-5xl px-6 pt-40 translate-y-20 text-center">
         {/* Name */}
-        <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-6xl">
+        <h1 className="text-4xl font-semibold tracking-tight text-black/90 dark:text-white sm:text-6xl">
           Varsha Viswanathan
         </h1>
 
         {/* Role */}
-        <p className="mt-4 text-lg text-white/75 sm:text-xl">
+        <p className="mt-4 text-lg text-black/70 dark:text-white/75 sm:text-xl">
           Software Engineer
         </p>
 
-        {/* Tagline (updated: no "I", no em dash) */}
-        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
+        {/* Tagline */}
+        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-black/65 dark:text-white/65 sm:text-lg">
           Building high performance, accessible, and thoughtfully designed web
           systems with a strong focus on usability and scale.
         </p>
@@ -43,12 +45,14 @@ export default function HeroSection() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             {/* Resume */}
             <NeonButton
-              href="/src/assets/resume.pdf"
+              href="/assets/resume.pdf"
               download
               className="
-                group bg-white/10 px-6 py-3
-                text-sm font-semibold text-white/85
-                hover:bg-white/12
+                group
+                bg-black/[0.05] px-6 py-3
+                text-sm font-semibold text-black/85
+                hover:bg-black/[0.08]
+                dark:bg-white/10 dark:text-white/85 dark:hover:bg-white/12
               "
             >
               <Download className={iconClass} />
@@ -63,9 +67,11 @@ export default function HeroSection() {
               ariaLabel="LinkedIn"
               title="LinkedIn"
               className="
-                group bg-white/5 px-4 py-3
-                text-sm font-medium text-white/70
-                hover:bg-white/10
+                group
+                bg-black/[0.04] px-4 py-3
+                text-sm font-medium text-black/65
+                hover:bg-black/[0.07]
+                dark:bg-white/5 dark:text-white/70 dark:hover:bg-white/10
               "
             >
               <Linkedin className={iconClass} />
@@ -80,9 +86,11 @@ export default function HeroSection() {
               ariaLabel="GitHub"
               title="GitHub"
               className="
-                group bg-white/5 px-4 py-3
-                text-sm font-medium text-white/70
-                hover:bg-white/10
+                group
+                bg-black/[0.04] px-4 py-3
+                text-sm font-medium text-black/65
+                hover:bg-black/[0.07]
+                dark:bg-white/5 dark:text-white/70 dark:hover:bg-white/10
               "
             >
               <Github className={iconClass} />
@@ -95,9 +103,11 @@ export default function HeroSection() {
               ariaLabel="Email"
               title="Email"
               className="
-                group bg-white/5 px-4 py-3
-                text-sm font-medium text-white/70
-                hover:bg-white/10
+                group
+                bg-black/[0.04] px-4 py-3
+                text-sm font-medium text-black/65
+                hover:bg-black/[0.07]
+                dark:bg-white/5 dark:text-white/70 dark:hover:bg-white/10
               "
             >
               <Mail className={iconClass} />
@@ -106,16 +116,18 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Scroll hint (brighter) */}
+        {/* Scroll hint */}
         <div className="mt-14">
           <div
             className="
               mx-auto h-0 w-0
               border-l-[7px] border-r-[7px] border-t-[9px]
               border-l-transparent border-r-transparent
-              border-t-white/70
+              border-t-black/60
+              dark:border-t-white/70
               animate-pulse
-              drop-shadow-[0_0_6px_rgba(255,255,255,0.35)]
+              drop-shadow-[0_0_6px_rgba(0,0,0,0.25)]
+              dark:drop-shadow-[0_0_6px_rgba(255,255,255,0.35)]
             "
           />
         </div>

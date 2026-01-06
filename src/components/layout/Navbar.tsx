@@ -91,8 +91,6 @@ export default function Navbar() {
       // The reference line: where we consider "active" (just under navbar)
       const line = NAV_OFFSET + 1;
 
-      // Find the section whose top is closest to that line,
-      // but only among sections that are above/before the line or near it.
       let bestId = sections[0].id;
       let bestDist = Number.POSITIVE_INFINITY;
 
@@ -100,8 +98,6 @@ export default function Navbar() {
         const top = s.getBoundingClientRect().top; // relative to viewport
         const dist = Math.abs(top - line);
 
-        // Prefer sections that are not far below the line (prevents jumping ahead)
-        // Allow a little below (e.g., 120px) so it still activates when approaching.
         const isCandidate = top <= line + 120;
 
         if (isCandidate && dist < bestDist) {
@@ -110,7 +106,6 @@ export default function Navbar() {
         }
       }
 
-      // If nothing qualified (rare), fall back to the first visible section
       if (!bestId) bestId = "home";
 
       if (bestId && bestId !== activeId) setActiveId(bestId);
@@ -124,7 +119,6 @@ export default function Navbar() {
       });
     };
 
-    // Run once on mount (important for refresh mid-page)
     pickActive();
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -165,11 +159,14 @@ export default function Navbar() {
         ref={navRef}
         className="
           relative inline-flex items-center gap-1
-          rounded-full border border-white/10
-          bg-zinc-950/60 backdrop-blur-xl
+          rounded-full border border-black/10
+          bg-white/70 backdrop-blur-xl
           px-2 py-2
-          shadow-[0_10px_30px_rgba(0,0,0,0.35)]
+          shadow-[0_10px_30px_rgba(0,0,0,0.18)]
           max-w-[92vw]
+          dark:border-white/10
+          dark:bg-zinc-950/60
+          dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]
         "
         aria-label="Primary"
       >
@@ -177,8 +174,9 @@ export default function Navbar() {
         <div
           className="
             absolute rounded-full
-            bg-white/10 ring-1 ring-white/10
+            bg-black/[0.05] ring-1 ring-black/10
             transition-all duration-300 ease-out
+            dark:bg-white/10 dark:ring-white/10
           "
           style={{
             transform: `translateX(${pill.left}px)`,
@@ -203,7 +201,11 @@ export default function Navbar() {
                 relative z-10 whitespace-nowrap rounded-full
                 px-4 py-2 text-sm font-medium
                 transition-colors duration-200
-                ${isActive ? "text-sky-300" : "text-white/55 hover:text-sky-300"}
+                ${
+                  isActive
+                    ? "text-sky-500 dark:text-sky-300"
+                    : "text-black/60 hover:text-sky-500 dark:text-white/55 dark:hover:text-sky-300"
+                }
                 focus:outline-none
               `}
               aria-current={isActive ? "page" : undefined}

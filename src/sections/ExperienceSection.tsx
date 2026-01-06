@@ -49,7 +49,7 @@ export default function ExperienceSection() {
 
   return (
     <section id="experience" className="mx-auto max-w-5xl px-6 py-14">
-      <h2 className="text-3xl font-semibold text-white/95 text-center">
+      <h2 className="text-3xl font-semibold text-black/90 dark:text-white/95 text-center">
         Experience
       </h2>
 
@@ -64,12 +64,13 @@ export default function ExperienceSection() {
               <div
                 className="
                   h-3 w-3 rounded-full
-                  border border-sky-300/45 bg-transparent
-                  shadow-[0_0_12px_rgba(56,189,248,0.14)]
+                  border border-sky-400/50
+                  bg-transparent
+                  shadow-[0_0_12px_rgba(56,189,248,0.18)]
                   transition-all duration-300
-                  group-hover:bg-sky-300/85
-                  group-hover:border-sky-300/85
-                  group-hover:shadow-[0_0_22px_rgba(56,189,248,0.30)]
+                  group-hover:bg-sky-400/90
+                  group-hover:border-sky-400/90
+                  group-hover:shadow-[0_0_26px_rgba(56,189,248,0.45)]
                 "
               />
             </div>
@@ -78,16 +79,19 @@ export default function ExperienceSection() {
               className="
                 group relative overflow-hidden
                 rounded-2xl
-                border border-white/15
-                bg-white/6
+                border border-black/15
+                bg-black/[0.035]
                 px-5 py-4
-                shadow-[0_10px_24px_rgba(0,0,0,0.26)]
+                shadow-[0_10px_24px_rgba(0,0,0,0.18)]
                 transition-all duration-300 ease-out
                 hover:-translate-y-0.5
-                hover:border-sky-300/40
+                hover:border-sky-400/45
+                dark:border-white/15
+                dark:bg-white/6
+                dark:shadow-[0_10px_24px_rgba(0,0,0,0.26)]
               "
             >
-              {/* 🔵 Bigger + glowier neon outline (outline-only, no inner bleed) */}
+              {/* Neon outline (theme-safe) */}
               <div
                 className="
                   pointer-events-none absolute -inset-[2px]
@@ -104,7 +108,7 @@ export default function ExperienceSection() {
                 }}
               />
 
-              {/* Subtle ambient bloom */}
+              {/* Ambient bloom */}
               <div
                 className="
                   pointer-events-none absolute inset-0 opacity-0
@@ -121,27 +125,27 @@ export default function ExperienceSection() {
                 {/* Header */}
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="text-[18px] font-semibold text-white/95">
+                    <h3 className="text-[18px] font-semibold text-black/90 dark:text-white/95">
                       {item.title}
                     </h3>
-                    <p className="mt-1 text-[15px] text-white/85">
+                    <p className="mt-1 text-[15px] text-black/75 dark:text-white/85">
                       {item.org}
                     </p>
                   </div>
 
                   <div className="shrink-0 text-right">
-                    <p className="text-[13px] text-white/65 whitespace-nowrap">
+                    <p className="text-[13px] text-black/55 dark:text-white/65 whitespace-nowrap">
                       {item.date}
                     </p>
                     {item.location && (
-                      <p className="mt-0.5 text-[12px] text-white/50 whitespace-nowrap">
+                      <p className="mt-0.5 text-[12px] text-black/45 dark:text-white/50 whitespace-nowrap">
                         {item.location}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <p className="mt-2 text-[15px] leading-relaxed text-white/80">
+                <p className="mt-2 text-[15px] leading-relaxed text-black/70 dark:text-white/80">
                   • {item.summary}
                 </p>
               </div>
