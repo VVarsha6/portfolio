@@ -245,8 +245,49 @@ function useRowMotion(targetRef: React.RefObject<HTMLElement | null>) {
   };
 }
 
+/** ✅ NEW: Mobile-only per-card pop + focus + blur/grey */
+function MobilePopWrap({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  // Progress based on this card entering/leaving viewport
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    // 0 when card bottom hits viewport bottom; 1 when card top hits viewport top
+    offset: ["end end", "start start"],
+  });
+
+  // Peak at middle (0.5), dim/blur at 0 and 1
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.94, 1, 0.965]);
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [18, 0, -10]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.58, 1, 0.72]);
+
+  const blur = useTransform(scrollYProgress, [0, 0.5, 1], [3.5, 0, 2.5]);
+  const gray = useTransform(scrollYProgress, [0, 0.5, 1], [0.55, 0, 0.4]);
+  const bright = useTransform(scrollYProgress, [0, 0.5, 1], [0.92, 1.04, 0.96]);
+
+  const filter = useTransform(
+    [blur, gray, bright],
+    ([b, g, br]) => `blur(${b}px) grayscale(${g}) brightness(${br})`
+  );
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{
+        scale,
+        y,
+        opacity,
+        filter,
+      }}
+      className="will-change-transform"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export default function ProjectsSection() {
-  const isMobile = useIsMobile(640); // ✅ Added
+  const isMobile = useIsMobile(640);
 
   const rows = useMemo(() => chunk(projects, 4), []);
   const row1Ref = useRef<HTMLDivElement | null>(null);
@@ -260,15 +301,18 @@ export default function ProjectsSection() {
         Projects
       </h2>
 
-      {/* ✅ Changed: mobile uses simple list (no row animation); desktop unchanged */}
       <div className="space-y-12 sm:space-y-14">
         {isMobile ? (
+          // ✅ Mobile: individual pop/focus animation per card
           <div className="grid gap-8">
             {projects.map((p) => (
-              <Card key={p.title} p={p} />
+              <MobilePopWrap key={p.title}>
+                <Card p={p} />
+              </MobilePopWrap>
             ))}
           </div>
         ) : (
+          // ✅ Desktop: UNCHANGED
           <>
             <motion.div
               ref={row1Ref}
