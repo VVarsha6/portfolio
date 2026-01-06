@@ -34,9 +34,7 @@ export default function SkillsSection() {
   useEffect(() => {
     const measure = () => {
       if (!measureRef.current) return;
-      setFixedHeight(
-        Math.ceil(measureRef.current.getBoundingClientRect().height)
-      );
+      setFixedHeight(Math.ceil(measureRef.current.getBoundingClientRect().height));
     };
 
     measure();
@@ -64,11 +62,7 @@ export default function SkillsSection() {
   useEffect(() => {
     if (!started || shownCount >= skills.length) return;
 
-    const t = window.setTimeout(
-      () => setShownCount((c) => c + 1),
-      55
-    );
-
+    const t = window.setTimeout(() => setShownCount((c) => c + 1), 55);
     return () => window.clearTimeout(t);
   }, [started, shownCount, skills.length]);
 
@@ -79,10 +73,8 @@ export default function SkillsSection() {
       className="
         relative
         mx-auto max-w-7xl px-6
-
-        pt-10 pb-48        /* 📱 mobile: MORE space after skills */
-        sm:pt-16 sm:pb-40 /* 🖥 desktop: UNTOUCHED */
-
+        pt-10 pb-60            /* 📱 bigger separation after Skills */
+        sm:pt-16 sm:pb-40      /* 🖥 desktop unchanged */
         scroll-mt-[120px]
       "
     >
@@ -92,14 +84,15 @@ export default function SkillsSection() {
 
       {/* Measurement container */}
       <div className="pointer-events-none absolute -left-[9999px] top-0 opacity-0">
-        <div ref={measureRef} className="flex flex-wrap justify-center gap-4">
+        <div ref={measureRef} className="flex flex-wrap justify-center gap-3 sm:gap-4">
           {skills.map((skill) => (
             <span
               key={`measure-${skill}`}
               className="
                 rounded-full border border-black/15 dark:border-white/20
                 bg-black/[0.04] dark:bg-white/10
-                px-5 py-2.5 text-sm font-medium
+                px-4 py-2 text-xs sm:px-5 sm:py-2.5 sm:text-sm  /* 📱 smaller chips */
+                font-medium
                 text-black/80 dark:text-white/85
               "
             >
@@ -111,7 +104,7 @@ export default function SkillsSection() {
 
       {/* Skill chips */}
       <div
-        className="mt-9 flex flex-wrap justify-center gap-4"
+        className="mt-9 flex flex-wrap justify-center gap-3 sm:gap-4" /* 📱 tighter + smaller */
         style={{ height: fixedHeight ?? undefined }}
       >
         {skills.slice(0, shownCount).map((skill) => (
@@ -121,7 +114,8 @@ export default function SkillsSection() {
               group relative rounded-full
               border border-black/15 dark:border-white/20
               bg-black/[0.05] dark:bg-white/10
-              px-5 py-2.5 text-sm font-medium
+              px-4 py-2 text-xs sm:px-5 sm:py-2.5 sm:text-sm  /* 📱 smaller chips */
+              font-medium
               text-black/85 dark:text-white/90
             "
           >
@@ -140,6 +134,9 @@ export default function SkillsSection() {
           </span>
         ))}
       </div>
+
+      {/* ✅ Mobile-only spacer: guarantees clear separation before Experience heading */}
+      <div className="h-10 sm:hidden" />
     </section>
   );
 }

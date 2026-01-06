@@ -52,8 +52,8 @@ export default function ExperienceSection() {
       id="experience"
       className="
         mx-auto max-w-5xl px-6
-        pt-20 pb-16
-        sm:pt-24 sm:pb-20
+        pt-28 pb-16          /* 📱 bigger gap before Experience heading */
+        sm:pt-24 sm:pb-20    /* 🖥 desktop unchanged */
         scroll-mt-[120px]
       "
     >
@@ -96,7 +96,7 @@ export default function ExperienceSection() {
                 dark:shadow-[0_10px_24px_rgba(0,0,0,0.26)]
               "
             >
-              {/* Neon outline (theme-safe) */}
+              {/* Neon outline */}
               <div
                 className="
                   pointer-events-none absolute -inset-[2px]
@@ -127,7 +127,6 @@ export default function ExperienceSection() {
               />
 
               <div className="relative">
-                {/* Header */}
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="text-[18px] font-semibold text-black/90 dark:text-white/95">
