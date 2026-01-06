@@ -79,8 +79,10 @@ export default function SkillsSection() {
       className="
         relative
         mx-auto max-w-7xl px-6
-        pt-10 pb-32            /* ⬅️ less space above, more below */
-        sm:pt-16 sm:pb-40     /* ⬅️ desktop: tighter top, clearer break after */
+
+        pt-10 pb-40        /* 📱 mobile: SAME visual gap as prev → Skills */
+        sm:pt-16 sm:pb-40 /* 🖥 desktop unchanged */
+
         scroll-mt-[120px]
       "
     >
@@ -109,7 +111,7 @@ export default function SkillsSection() {
 
       {/* Skill chips */}
       <div
-        className="mt-9 flex flex-wrap justify-center gap-4" /* ⬅️ slightly tighter */
+        className="mt-9 flex flex-wrap justify-center gap-4"
         style={{ height: fixedHeight ?? undefined }}
       >
         {skills.slice(0, shownCount).map((skill) => (
