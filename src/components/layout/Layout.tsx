@@ -1,3 +1,4 @@
+import React from "react";
 import ThemeToggle from "../ui/ThemeToggle";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -9,23 +10,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         dark:bg-[#0e141b] dark:text-white/90
         bg-space
         transition-colors duration-300
-        pt-20 sm:pt-24
       "
->
-  <div
-  className="
-    fixed z-[9999]
-    right-4 bottom-4
-    sm:right-5 sm:bottom-5
-    bottom-[calc(env(safe-area-inset-bottom)+1rem)]
-    right-[calc(env(safe-area-inset-right)+1rem)]
-  "
->
-  <ThemeToggle />
-</div>
+    >
+      <div className="fixed right-5 top-5 z-[999]">
+        <ThemeToggle />
+      </div>
 
-
-
+      {/* App content */}
       {children}
     </div>
   );

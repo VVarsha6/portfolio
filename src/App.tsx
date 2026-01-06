@@ -1,12 +1,14 @@
 import Navbar from "./components/layout/Navbar";
+import Layout from "./components/layout/Layout";
+
 import HeroSection from "./sections/HeroSection";
 import AboutSection from "./sections/AboutSection";
-import ExperienceSection from "./sections/ExperienceSection";
-import SkillsSection from "./sections/SkillsSection";
 import ProjectsSection from "./sections/ProjectsSection";
+import SkillsSection from "./sections/SkillsSection";
+import ExperienceSection from "./sections/ExperienceSection";
 import Footer from "./sections/Footer";
+
 import FadeSection from "./components/ui/FadeSection";
-import Layout from "./components/layout/Layout";
 
 export default function App() {
   return (
@@ -29,6 +31,7 @@ export default function App() {
         </FadeSection>
 
         <ExperienceSection />
+
         <Footer />
       </main>
     </Layout>
