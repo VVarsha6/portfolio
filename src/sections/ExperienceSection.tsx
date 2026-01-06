@@ -48,7 +48,15 @@ export default function ExperienceSection() {
   );
 
   return (
-    <section id="experience" className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
+    <section
+      id="experience"
+      className="
+        mx-auto max-w-5xl px-6
+        pt-20 pb-16
+        sm:pt-24 sm:pb-20
+        scroll-mt-[120px]
+      "
+    >
       <h2 className="text-3xl font-semibold text-black/90 dark:text-white/95 text-center">
         Experience
       </h2>
