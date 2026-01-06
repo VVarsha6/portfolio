@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         transition-colors duration-300
       "
     >
-      <div className="fixed right-5 top-5 z-[999]">
+      <div className="fixed right-5 bottom-5 z-[999]">
         <ThemeToggle />
       </div>
 
