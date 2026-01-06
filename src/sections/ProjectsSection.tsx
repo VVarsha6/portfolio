@@ -92,11 +92,11 @@ function clampIndex(n: number, len: number) {
   return ((n % len) + len) % len;
 }
 
-/** ✅ Added: mobile detector (only used to disable row animation on mobile) */
+/** Mobile detector */
 function useIsMobile(breakpointPx = 640) {
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const mq = window.matchMedia(`(max-width: ${breakpointPx - 1}px)`);
     const update = () => setIsMobile(mq.matches);
     update();
@@ -133,25 +133,14 @@ function CardMedia({
   }, [active, hasMultiple, sources.length]);
 
   return (
-    <div
-      className="
-        relative mb-5 aspect-video overflow-hidden rounded-xl
-        bg-black/[0.06] ring-1 ring-black/10
-        dark:bg-black/35 dark:ring-white/10
-      "
-    >
+    <div className="relative mb-5 aspect-video overflow-hidden rounded-xl bg-black/[0.06] ring-1 ring-black/10 dark:bg-black/35 dark:ring-white/10">
       <img
         src={sources[idx]}
         alt={title}
-        className="
-          absolute inset-0 h-full w-full object-cover
-          transition-transform duration-300
-          group-hover:scale-[1.04]
-        "
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
         loading="lazy"
         draggable={false}
       />
-
       <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0 dark:from-black/35" />
     </div>
   );
@@ -185,11 +174,7 @@ function Card({ p }: { p: Project }) {
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
       <div
-        className="
-          pointer-events-none absolute -inset-[2px] rounded-[20px]
-          opacity-0 transition-opacity duration-200
-          group-hover:opacity-100 group-focus-visible:opacity-100
-        "
+        className="pointer-events-none absolute -inset-[2px] rounded-[20px] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
         style={{
           boxShadow:
             "0 0 0 2px rgba(56,189,248,0.92), 0 0 40px rgba(56,189,248,0.38), 0 0 70px rgba(56,189,248,0.18)",
@@ -212,13 +197,7 @@ function Card({ p }: { p: Project }) {
         {p.tech.slice(0, 5).map((t) => (
           <span
             key={t}
-            className="
-              relative inline-flex items-center justify-center
-              rounded-full border
-              border-black/15 bg-black/[0.04]
-              px-3 py-1 text-[11px] text-black/75
-              dark:border-white/20 dark:bg-white/10 dark:text-white/85
-            "
+            className="rounded-full border border-black/15 bg-black/[0.04] px-3 py-1 text-[11px] text-black/75 dark:border-white/20 dark:bg-white/10 dark:text-white/85"
           >
             {t}
           </span>
@@ -245,40 +224,6 @@ function useRowMotion(targetRef: React.RefObject<HTMLElement | null>) {
   };
 }
 
-/** ✅ REPLACE MobilePopWrap with this: minimal bottom-blackout only */
-function MobilePopWrap({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    // 0 when card is near bottom entering, 1 when card passes top
-    offset: ["end end", "start start"],
-  });
-
-  // Quick blackout ONLY near the bottom; disappears fast.
-  // At scroll progress 0 -> dark, by ~0.14 -> clear, then stays clear.
-  const scrimOpacity = useTransform(scrollYProgress, [0, 0.14, 1], [0.65, 0, 0]);
-
-  return (
-    <motion.div ref={ref} className="relative">
-      {/* Blackout overlay */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-2xl"
-        style={{
-          opacity: scrimOpacity,
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.35) 55%, rgba(0,0,0,0))",
-        }}
-      />
-
-      {/* Content (no transform, no filter) */}
-      <div className="relative">{children}</div>
-    </motion.div>
-  );
-}
-
-
 export default function ProjectsSection() {
   const isMobile = useIsMobile(640);
 
@@ -296,24 +241,19 @@ export default function ProjectsSection() {
 
       <div className="space-y-12 sm:space-y-14">
         {isMobile ? (
+          /* ✅ Mobile: NO animation, simple readable list */
           <div className="grid gap-8">
             {projects.map((p) => (
-              <MobilePopWrap key={p.title}>
-                <Card p={p} />
-              </MobilePopWrap>
+              <Card key={p.title} p={p} />
             ))}
           </div>
         ) : (
+          /* ✅ Desktop: unchanged animated rows */
           <>
             <motion.div
               ref={row1Ref}
               style={row1}
-              className="
-                grid gap-8
-                sm:gap-10 sm:grid-cols-2
-                lg:grid-cols-3
-                xl:grid-cols-4
-              "
+              className="grid gap-8 sm:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             >
               {rows[0]?.map((p) => (
                 <Card key={p.title} p={p} />
@@ -323,12 +263,7 @@ export default function ProjectsSection() {
             <motion.div
               ref={row2Ref}
               style={row2}
-              className="
-                grid gap-8
-                sm:gap-10 sm:grid-cols-2
-                lg:grid-cols-3
-                xl:grid-cols-4
-              "
+              className="grid gap-8 sm:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             >
               {rows[1]?.map((p) => (
                 <Card key={p.title} p={p} />
