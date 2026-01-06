@@ -38,7 +38,7 @@ export default function Navbar() {
     const rect = span?.getBoundingClientRect() ?? btn.getBoundingClientRect();
 
     const width = Math.ceil(rect.width + PILL_PAD_LEFT + PILL_PAD_RIGHT);
-    const left = Math.round(rect.left - navRect.left - PILL_PAD_LEFT);
+    const left = Math.round(rect.left - navRect.left - PILL_PAD_LEFT-3);
 
     setPill({ left, width });
   };
