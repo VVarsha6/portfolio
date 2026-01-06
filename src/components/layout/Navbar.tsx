@@ -18,11 +18,9 @@ export default function Navbar() {
 
   const navRef = useRef<HTMLElement | null>(null);
   const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [pill, setPill] = useState({ left: 0, width: 0 });
+  const [pill, setPill] = useState({ left: 0, top: 0, width: 0, height: 0 });
 
   const NAV_OFFSET = 110;
-  const PILL_PAD_LEFT = 20;
-  const PILL_PAD_RIGHT = 8;
 
   const clickingRef = useRef(false);
   const clickTimeoutRef = useRef<number | null>(null);
@@ -33,14 +31,13 @@ export default function Navbar() {
     const btn = btnRefs.current[activeId];
     if (!nav || !btn) return;
 
-    const navRect = nav.getBoundingClientRect();
-    const span = btn.querySelector("span");
-    const rect = span?.getBoundingClientRect() ?? btn.getBoundingClientRect();
+    // ✅ Use offset-based layout (stable even when buttons wrap to next line)
+    const left = btn.offsetLeft;
+    const top = btn.offsetTop;
+    const width = btn.offsetWidth;
+    const height = btn.offsetHeight;
 
-    const width = Math.ceil(rect.width + PILL_PAD_LEFT + PILL_PAD_RIGHT);
-    const left = Math.round(rect.left - navRect.left - PILL_PAD_LEFT);
-
-    setPill({ left, width });
+    setPill({ left, top, width, height });
   };
 
   useLayoutEffect(() => {
@@ -144,7 +141,7 @@ export default function Navbar() {
       <nav
         ref={navRef}
         className="
-          relative flex items-center
+          relative
           rounded-full
           border border-black/10 bg-white/70
           dark:border-white/10 dark:bg-zinc-950/60
@@ -156,9 +153,9 @@ export default function Navbar() {
         "
         aria-label="Primary"
       >
-        {/* Scroll container so labels never spill out on mobile */}
-        <div className="relative flex w-full items-center overflow-x-auto no-scrollbar">
-          {/* Active pill */}
+        {/* ✅ Mobile: wrap (no horizontal scroll). Desktop: keep single row. */}
+        <div className="relative">
+          {/* Active pill (works with wrapping) */}
           <div
             className="
               absolute rounded-full
@@ -167,14 +164,19 @@ export default function Navbar() {
               transition-all duration-300 ease-out
             "
             style={{
-              transform: `translateX(${pill.left}px)`,
+              transform: `translate(${pill.left}px, ${pill.top}px)`,
               width: `${pill.width}px`,
-              top: "6px",
-              bottom: "6px",
+              height: `${pill.height}px`,
             }}
           />
 
-          <div className="relative z-10 flex items-center gap-1 pr-1">
+          <div
+            className="
+              relative z-10
+              flex flex-wrap items-center justify-center gap-1
+              sm:flex-nowrap sm:justify-start
+            "
+          >
             {items.map((item) => {
               const isActive = item.id === activeId;
 
@@ -187,7 +189,7 @@ export default function Navbar() {
                   type="button"
                   onClick={() => handleClick(item.id)}
                   className={`
-                    whitespace-nowrap rounded-full
+                    rounded-full
                     px-3 py-2 text-[13px] sm:px-4 sm:text-sm
                     font-medium transition-colors duration-200
                     ${
@@ -199,7 +201,7 @@ export default function Navbar() {
                   `}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  <span>{item.label}</span>
+                  <span className="whitespace-nowrap">{item.label}</span>
                 </button>
               );
             })}
