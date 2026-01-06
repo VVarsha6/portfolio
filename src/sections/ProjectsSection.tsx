@@ -245,46 +245,39 @@ function useRowMotion(targetRef: React.RefObject<HTMLElement | null>) {
   };
 }
 
-/** ✅ NEW: Mobile-only per-card pop + focus + blur/grey */
+/** ✅ REPLACE MobilePopWrap with this: minimal bottom-blackout only */
 function MobilePopWrap({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement | null>(null);
 
-  // Progress based on this card entering/leaving viewport
   const { scrollYProgress } = useScroll({
     target: ref,
-    // 0 when card bottom hits viewport bottom; 1 when card top hits viewport top
+    // 0 when card is near bottom entering, 1 when card passes top
     offset: ["end end", "start start"],
   });
 
-  // Peak at middle (0.5), dim/blur at 0 and 1
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.94, 1, 0.965]);
-  const y = useTransform(scrollYProgress, [0, 0.5, 1], [18, 0, -10]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.58, 1, 0.72]);
-
-  const blur = useTransform(scrollYProgress, [0, 0.5, 1], [3.5, 0, 2.5]);
-  const gray = useTransform(scrollYProgress, [0, 0.5, 1], [0.55, 0, 0.4]);
-  const bright = useTransform(scrollYProgress, [0, 0.5, 1], [0.92, 1.04, 0.96]);
-
-  const filter = useTransform(
-    [blur, gray, bright],
-    ([b, g, br]) => `blur(${b}px) grayscale(${g}) brightness(${br})`
-  );
+  // Quick blackout ONLY near the bottom; disappears fast.
+  // At scroll progress 0 -> dark, by ~0.14 -> clear, then stays clear.
+  const scrimOpacity = useTransform(scrollYProgress, [0, 0.14, 1], [0.65, 0, 0]);
 
   return (
-    <motion.div
-      ref={ref}
-      style={{
-        scale,
-        y,
-        opacity,
-        filter,
-      }}
-      className="will-change-transform"
-    >
-      {children}
+    <motion.div ref={ref} className="relative">
+      {/* Blackout overlay */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-2xl"
+        style={{
+          opacity: scrimOpacity,
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.35) 55%, rgba(0,0,0,0))",
+        }}
+      />
+
+      {/* Content (no transform, no filter) */}
+      <div className="relative">{children}</div>
     </motion.div>
   );
 }
+
 
 export default function ProjectsSection() {
   const isMobile = useIsMobile(640);
@@ -303,7 +296,6 @@ export default function ProjectsSection() {
 
       <div className="space-y-12 sm:space-y-14">
         {isMobile ? (
-          // ✅ Mobile: individual pop/focus animation per card
           <div className="grid gap-8">
             {projects.map((p) => (
               <MobilePopWrap key={p.title}>
@@ -312,7 +304,6 @@ export default function ProjectsSection() {
             ))}
           </div>
         ) : (
-          // ✅ Desktop: UNCHANGED
           <>
             <motion.div
               ref={row1Ref}
