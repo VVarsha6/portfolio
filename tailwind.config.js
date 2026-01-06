@@ -2,6 +2,10 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      colors: {
+      textPrimary: "rgba(255,255,255,0.9)",
+      textSecondary: "rgba(255,255,255,0.72)",
+    },
       keyframes: {
         jiggle: {
           "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
@@ -17,3 +21,4 @@ export default {
   },
   plugins: [],
 };
+    

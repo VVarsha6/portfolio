@@ -49,40 +49,62 @@ export default function ExperienceSection() {
 
   return (
     <section id="experience" className="mx-auto max-w-5xl px-6 py-14">
-      <h2 className="text-3xl font-semibold text-white text-center">
+      <h2 className="text-3xl font-semibold text-white/95 text-center">
         Experience
       </h2>
 
-      <div className="mt-8 space-y-3">
+      <div className="mt-10 space-y-4">
         {items.map((item, idx) => (
-          <div key={`${item.org}-${item.date}-${idx}`} className="group relative">
+          <div
+            key={`${item.org}-${item.date}-${idx}`}
+            className="group relative"
+          >
             {/* Left indicator */}
             <div className="pointer-events-none absolute left-0 top-6 hidden -translate-x-6 sm:block">
               <div
                 className="
                   h-3 w-3 rounded-full
-                  border border-sky-300/40 bg-transparent
-                  shadow-[0_0_12px_rgba(56,189,248,0.10)]
+                  border border-sky-300/45 bg-transparent
+                  shadow-[0_0_12px_rgba(56,189,248,0.14)]
                   transition-all duration-300
-                  group-hover:bg-sky-300/80
-                  group-hover:border-sky-300/80
-                  group-hover:shadow-[0_0_18px_rgba(56,189,248,0.26)]
+                  group-hover:bg-sky-300/85
+                  group-hover:border-sky-300/85
+                  group-hover:shadow-[0_0_22px_rgba(56,189,248,0.30)]
                 "
               />
             </div>
 
             <article
               className="
-                relative overflow-hidden
-                rounded-2xl border border-white/10 bg-white/[0.03]
+                group relative overflow-hidden
+                rounded-2xl
+                border border-white/15
+                bg-white/6
                 px-5 py-4
                 shadow-[0_10px_24px_rgba(0,0,0,0.26)]
                 transition-all duration-300 ease-out
                 hover:-translate-y-0.5
-                hover:border-sky-300/25
+                hover:border-sky-300/40
               "
             >
-              {/* subtle bloom */}
+              {/* 🔵 Bigger + glowier neon outline (outline-only, no inner bleed) */}
+              <div
+                className="
+                  pointer-events-none absolute -inset-[2px]
+                  rounded-[20px]
+                  opacity-0 transition-opacity duration-200
+                  group-hover:opacity-100
+                "
+                style={{
+                  boxShadow: `
+                    0 0 0 2px rgba(56,189,248,0.95),
+                    0 0 38px rgba(56,189,248,0.55),
+                    0 0 60px rgba(56,189,248,0.25)
+                  `,
+                }}
+              />
+
+              {/* Subtle ambient bloom */}
               <div
                 className="
                   pointer-events-none absolute inset-0 opacity-0
@@ -91,37 +113,35 @@ export default function ExperienceSection() {
                 "
                 style={{
                   background:
-                    "radial-gradient(480px circle at 32% 40%, rgba(56,189,248,0.08), rgba(56,189,248,0.03) 42%, rgba(0,0,0,0) 72%)",
+                    "radial-gradient(520px circle at 32% 40%, rgba(56,189,248,0.10), rgba(56,189,248,0.04) 42%, rgba(0,0,0,0) 72%)",
                 }}
               />
 
               <div className="relative">
-                {/* Header row */}
+                {/* Header */}
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="text-[18px] font-semibold text-white">
+                    <h3 className="text-[18px] font-semibold text-white/95">
                       {item.title}
                     </h3>
-                    <p className="mt-1 text-[15px] text-white/80">
+                    <p className="mt-1 text-[15px] text-white/85">
                       {item.org}
                     </p>
                   </div>
 
-                  {/* Date on right */}
                   <div className="shrink-0 text-right">
-                    <p className="text-[13px] text-white/50 whitespace-nowrap">
+                    <p className="text-[13px] text-white/65 whitespace-nowrap">
                       {item.date}
                     </p>
                     {item.location && (
-                      <p className="mt-0.5 text-[12px] text-white/35 whitespace-nowrap">
+                      <p className="mt-0.5 text-[12px] text-white/50 whitespace-nowrap">
                         {item.location}
                       </p>
                     )}
                   </div>
                 </div>
 
-                {/* Summary */}
-                <p className="mt-3 text-[15px] leading-relaxed text-white/70">
+                <p className="mt-2 text-[15px] leading-relaxed text-white/80">
                   • {item.summary}
                 </p>
               </div>
