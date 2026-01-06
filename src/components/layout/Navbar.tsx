@@ -41,7 +41,6 @@ export default function Navbar() {
 
   useLayoutEffect(() => {
     recalcPill();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);
 
   useEffect(() => {
@@ -55,7 +54,6 @@ export default function Navbar() {
       window.removeEventListener("resize", onResize);
       ro?.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);
 
   useEffect(() => {
@@ -145,15 +143,15 @@ export default function Navbar() {
           border border-black/10 bg-white/70
           dark:border-white/10 dark:bg-zinc-950/60
           backdrop-blur-xl
-          px-2 py-1.5          /* ✅ slightly shorter on mobile */
-          sm:py-2             /* ✅ desktop unchanged */
+          px-2 py-1.5          
+          sm:py-2             
           shadow-[0_10px_30px_rgba(0,0,0,0.18)]
           dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]
           max-w-full
         "
         aria-label="Primary"
       >
-        {/* ✅ No horizontal scroll; keep one row; tighten spacing on mobile */}
+        {}
         <div className="relative overflow-hidden">
           {/* Active pill */}
           <div
