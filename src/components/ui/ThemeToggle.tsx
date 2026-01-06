@@ -2,27 +2,21 @@ import { useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
 
-function getInitialTheme(): Theme {
-  const saved = localStorage.getItem("theme") as Theme | null;
-  if (saved === "light" || saved === "dark") return saved;
-
-  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-  return prefersDark ? "dark" : "light";
-}
-
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("dark");
-
-  useEffect(() => {
-    const t = getInitialTheme();
-    setTheme(t);
-  }, []);
+  const [theme, setTheme] = useState<Theme>(() =>
+    document.documentElement.classList.contains("dark") ? "dark" : "light"
+  );
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
-    localStorage.setItem("theme", theme);
+
+    if (theme === "dark") {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
   }, [theme]);
 
   return (
@@ -34,7 +28,7 @@ export default function ThemeToggle() {
       className="
         group relative inline-flex items-center justify-center
         h-10 w-10 rounded-full
-        border border-black/20 bg-white/90
+        border border-black/15 bg-white/80
         shadow-sm backdrop-blur
         transition-all duration-200
         hover:-translate-y-[1px]
@@ -42,7 +36,7 @@ export default function ThemeToggle() {
         dark:border-white/15 dark:bg-white/10
       "
     >
-      {/* Neon outline glow */}
+      {/* Neon outline */}
       <span
         className="
           pointer-events-none absolute -inset-[2px] rounded-full
@@ -51,13 +45,12 @@ export default function ThemeToggle() {
         "
         style={{
           boxShadow:
-            "0 0 0 2px rgba(56,189,248,0.9), 0 0 20px rgba(56,189,248,0.45), 0 0 40px rgba(56,189,248,0.20)",
+            "0 0 0 2px rgba(56,189,248,0.9), 0 0 20px rgba(56,189,248,0.45)",
         }}
       />
 
-      {/* Icons */}
       <img
-        src={theme === "dark" ? "./src/icons/sun.png" : "./src/icons/moon.png"}
+        src={theme === "dark" ? "src/icons/sun.png" : "src/icons/moon.png"}
         alt=""
         className="h-5 w-5 select-none"
         draggable={false}
