@@ -80,8 +80,8 @@ export default function SkillsSection() {
         relative
         mx-auto max-w-7xl px-6
 
-        pt-10 pb-40        /* 📱 mobile: SAME visual gap as prev → Skills */
-        sm:pt-16 sm:pb-40 /* 🖥 desktop unchanged */
+        pt-10 pb-48        /* 📱 mobile: MORE space after skills */
+        sm:pt-16 sm:pb-40 /* 🖥 desktop: UNTOUCHED */
 
         scroll-mt-[120px]
       "
