@@ -31,13 +31,12 @@ export default function Navbar() {
     const btn = btnRefs.current[activeId];
     if (!nav || !btn) return;
 
-    // ✅ Use offset-based layout (stable even when buttons wrap to next line)
-    const left = btn.offsetLeft;
-    const top = btn.offsetTop;
-    const width = btn.offsetWidth;
-    const height = btn.offsetHeight;
-
-    setPill({ left, top, width, height });
+    setPill({
+      left: btn.offsetLeft,
+      top: btn.offsetTop,
+      width: btn.offsetWidth,
+      height: btn.offsetHeight,
+    });
   };
 
   useLayoutEffect(() => {
@@ -146,16 +145,17 @@ export default function Navbar() {
           border border-black/10 bg-white/70
           dark:border-white/10 dark:bg-zinc-950/60
           backdrop-blur-xl
-          px-2 py-2
+          px-2 py-1.5          /* ✅ slightly shorter on mobile */
+          sm:py-2             /* ✅ desktop unchanged */
           shadow-[0_10px_30px_rgba(0,0,0,0.18)]
           dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]
           max-w-full
         "
         aria-label="Primary"
       >
-        {/* ✅ Mobile: wrap (no horizontal scroll). Desktop: keep single row. */}
-        <div className="relative">
-          {/* Active pill (works with wrapping) */}
+        {/* ✅ No horizontal scroll; keep one row; tighten spacing on mobile */}
+        <div className="relative overflow-hidden">
+          {/* Active pill */}
           <div
             className="
               absolute rounded-full
@@ -173,8 +173,9 @@ export default function Navbar() {
           <div
             className="
               relative z-10
-              flex flex-wrap items-center justify-center gap-1
-              sm:flex-nowrap sm:justify-start
+              flex items-center justify-between
+              gap-0.5              /* ✅ tighter gap on mobile */
+              sm:gap-1
             "
           >
             {items.map((item) => {
@@ -190,7 +191,8 @@ export default function Navbar() {
                   onClick={() => handleClick(item.id)}
                   className={`
                     rounded-full
-                    px-3 py-2 text-[13px] sm:px-4 sm:text-sm
+                    px-2 py-1.5 text-[12px]   /* ✅ smaller + tighter on mobile */
+                    sm:px-4 sm:py-2 sm:text-sm /* ✅ desktop unchanged */
                     font-medium transition-colors duration-200
                     ${
                       isActive
